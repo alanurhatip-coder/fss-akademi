@@ -25,13 +25,34 @@ const academicServices = [
     title: "Lisans, Lisansüstü ve Akademisyenlere Yönelik",
     icon: <GraduationCap className="w-5 h-5" />,
     items: [
-      "MAXQDA ile Nitel Veri Analizi",
-      "TÜBİTAK Projesi Yazma",
-      "Avrupa Birliği (Erasmus) Projesi Yazma",
-      "Akademik Yazma",
-      "Canva Kullanımı",
-      "Yapay Zekâ Araçlarının Kullanımı",
-      "Eğitim için Sosyal Medya Kullanımı"
+      { 
+        name: "MAXQDA ile Nitel Veri Analizi", 
+        desc: "Nitel araştırmalarınızda verilerinizi kodlama, temalaştırma ve görselleştirme teknikleriyle derinlemesine analiz etme becerisi kazanın." 
+      },
+      { 
+        name: "TÜBİTAK Projesi Yazma", 
+        desc: "2209 ve diğer araştırma projeleri için yenilikçi, literatüre katkı sağlayan ve kabul oranı yüksek proje metni hazırlama stratejileri." 
+      },
+      { 
+        name: "Avrupa Birliği (Erasmus) Projesi Yazma", 
+        desc: "Uluslararası fon bulma, mantıksal çerçeve yaklaşımı ve sürdürülebilir, etkili eğitim projeleri tasarlama süreçleri." 
+      },
+      { 
+        name: "Akademik Yazma", 
+        desc: "Makale, bildiri ve tez süreçlerinde akademik dilin doğru kullanımı, APA formatı ve yayın standartları üzerine pratik eğitim." 
+      },
+      { 
+        name: "Canva Kullanımı", 
+        desc: "Ders planları, sunumlar ve interaktif çalışma yaprakları için profesyonel ve dikkat çekici görsel materyal tasarımı." 
+      },
+      { 
+        name: "Yapay Zekâ Araçlarının Kullanımı", 
+        desc: "Eğitimde üretken yapay zekâ ile interaktif hikaye oluşturma, karakter tasarımı ve yenilikçi eğitim materyali üretimi." 
+      },
+      { 
+        name: "Eğitim için Sosyal Medya Kullanımı", 
+        desc: "Akademik kimlik inşası ve eğitim içeriklerinizi doğru kitleye ulaştırmak için profesyonel dijital görünürlük stratejileri." 
+      }
     ]
   },
   {
@@ -39,9 +60,18 @@ const academicServices = [
     title: "Kurumlara Yönelik",
     icon: <Building2 className="w-5 h-5" />,
     items: [
-      "Özel Okullar için Danışmanlık",
-      "Ters-Yüz Sınıf Modeli",
-      "Eğitim Danışmanlığı"
+      { 
+        name: "Özel Okullar için Danışmanlık", 
+        desc: "Kurumsal eğitim kalitesini artırma, modern müfredat entegrasyonu ve yenilikçi öğretmen eğitimi rehberliği." 
+      },
+      { 
+        name: "Ters-Yüz Sınıf Modeli", 
+        desc: "Öğrenci merkezli, aktif katılımı destekleyen ve sınıf içi etkileşimi en üst düzeye çıkaran modern pedagojik yaklaşımların kuruma entegrasyonu." 
+      },
+      { 
+        name: "Eğitim Danışmanlığı", 
+        desc: "Kurumunuzun vizyonuna uygun, yenilikçi ve sürdürülebilir eğitim modelleri geliştirme süreçleri." 
+      }
     ]
   }
 ];
@@ -53,8 +83,14 @@ const studentServices = [
     title: "Velilere Yönelik",
     icon: <Users className="w-5 h-5" />,
     items: [
-      "İlkokul Velileri için Matematik Eğitimi",
-      "Ortaokul Velileri için Matematik Eğitimi"
+      { 
+        name: "İlkokul Velileri için Matematik Eğitimi", 
+        desc: "Çocuğunuza matematiği oyunlaştırma teknikleriyle sevdirmenin ve yeni nesil soru mantığını evde desteklemenin yolları." 
+      },
+      { 
+        name: "Ortaokul Velileri için Matematik Eğitimi", 
+        desc: "LGS sürecinde psikolojik destek, analitik düşünme becerilerini geliştirme ve doğru akademik takip stratejileri." 
+      }
     ]
   },
   {
@@ -62,11 +98,26 @@ const studentServices = [
     title: "Öğrencilere Yönelik",
     icon: <BookOpen className="w-5 h-5" />,
     items: [
-      "İlkokul/Ortaokul Öğrencileri için Problem Çözme Kampı",
-      "İlkokul Öğrencileri için Beceri Geliştirme (İstatistiksel Akıl Yürütme)",
-      "Özel Ders - 1.-4. Sınıf",
-      "Özel Ders - 5.-11. Sınıf (Matematik)",
-      "Özel Ders - LGS, TYT, AYT, DGS, KPSS, ALES Matematik"
+      { 
+        name: "İlkokul/Ortaokul Öğrencileri için Problem Çözme Kampı", 
+        desc: "Ezberden uzak, eleştirel düşünmeyi ve yaratıcı problem çözme becerilerini geliştiren, interaktif ve yoğunlaştırılmış kamp programı." 
+      },
+      { 
+        name: "İlkokul Öğrencileri için Beceri Geliştirme (İstatistiksel Akıl Yürütme)", 
+        desc: "Verileri okuma, tablo/grafik yorumlama ve günlük hayattaki problemleri matematiksel mantıkla çözme becerileri." 
+      },
+      { 
+        name: "Özel Ders - 1.-4. Sınıf", 
+        desc: "Öğrencinin bireysel hızına uygun, görsel materyallerle desteklenmiş, tüm derslerde temel becerileri sağlamlaştıran birebir eğitim." 
+      },
+      { 
+        name: "Özel Ders - 5.-11. Sınıf (Matematik)", 
+        desc: "Matematiksel kavramları somutlaştıran, analitik düşünmeyi geliştiren ve okul başarısını doğrudan artıran kişiselleştirilmiş dersler." 
+      },
+      { 
+        name: "Özel Ders - LGS, TYT, AYT, DGS, KPSS, ALES Matematik", 
+        desc: "Yeni nesil sorulara özel taktikler, zaman yönetimi ve yüksek hedeflere yönelik yoğun, sonuç odaklı sınav hazırlığı." 
+      }
     ]
   }
 ];
