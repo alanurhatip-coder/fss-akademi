@@ -4,11 +4,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { ChevronDown, GraduationCap, Building2, Users, BookOpen, Send, ArrowDown, Menu, X, MessageCircle, Calendar } from "lucide-react";
 
 // WhatsApp Number and URL Helper
-const WHATSAPP_NUMBER = "905436619340";
-const getWhatsAppUrl = (message) => {
-  // Using api.whatsapp.com for better compatibility
-  return `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${encodeURIComponent(message)}`;
-};
+const WHATSAPP_URL = "https://wa.me/905436619340?text=Merhaba,%20FSS%20Akademi%20eğitimleri%20hakkında%20bilgi%20almak%20istiyorum.";
 
 // FSS Akademi Logo URL
 const LOGO_URL = "https://customer-assets.emergentagent.com/job_0eba98ac-e02f-4df7-af03-a40a9b33d4a9/artifacts/tykox5io_Ekran%20g%C3%B6r%C3%BCnt%C3%BCs%C3%BC%202026-02-23%20042936.png";
