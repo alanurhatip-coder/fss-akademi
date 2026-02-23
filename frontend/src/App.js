@@ -265,7 +265,7 @@ const WhatsAppButton = () => {
 
   return (
     <a
-      href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Merhaba, FSS Akademi hakkında bilgi almak istiyorum.")}`}
+      href={getWhatsAppUrl("Merhaba, FSS Akademi hakkında bilgi almak istiyorum.")}
       target="_blank"
       rel="noopener noreferrer"
       className={`fixed bottom-24 right-6 z-40 flex items-center gap-3 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-[0_4px_20px_rgba(34,197,94,0.4)] hover:shadow-[0_4px_30px_rgba(34,197,94,0.6)] transition-all duration-300 hover:scale-105 ${
@@ -342,7 +342,7 @@ const HeroSection = () => {
 
       {/* CTA Button */}
       <a
-        href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Merhaba, ücretsiz danışmanlık randevusu almak istiyorum.")}`}
+        href={getWhatsAppUrl("Merhaba, ücretsiz danışmanlık randevusu almak istiyorum.")}
         target="_blank"
         rel="noopener noreferrer"
         className="btn-premium mt-10 flex items-center gap-3 bg-academic-gold text-academic-navy hover:bg-academic-gold-dim rounded-full px-8 py-4 font-manrope font-semibold text-lg shadow-[0_0_30px_rgba(212,175,55,0.4)] hover:shadow-[0_0_50px_rgba(212,175,55,0.6)] hover:scale-105 transition-all opacity-0 animate-fade-in-up"
