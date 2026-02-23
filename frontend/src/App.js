@@ -241,8 +241,9 @@ const HeroSection = () => {
 
   return (
     <section 
+      id="hero"
       data-testid="hero-section"
-      className="hero-bg mesh-gradient-dark min-h-[85vh] flex flex-col items-center justify-center relative px-6 md:px-12"
+      className="hero-bg mesh-gradient-dark min-h-[85vh] flex flex-col items-center justify-center relative px-6 md:px-12 pt-24"
     >
       {/* Floating Geometric Shapes */}
       <div className="floating-shape floating-shape-1" style={{ transform: `translateY(${scrollY * 0.1}px)` }} />
@@ -283,6 +284,19 @@ const HeroSection = () => {
         profesyonel rehberlik sunarken; diğer yanda öğrencilerimizin problem çözme, istatistiksel akıl yürütme becerilerini geliştiriyoruz. 
         <span className="text-academic-gold font-medium"> Başarı yolculuğunuzda güvenilir yol arkadaşınız olmaktan gurur duyuyoruz.</span>
       </p>
+
+      {/* CTA Button */}
+      <a
+        href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Merhaba, ücretsiz danışmanlık randevusu almak istiyorum.")}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="btn-premium mt-10 flex items-center gap-3 bg-academic-gold text-academic-navy hover:bg-academic-gold-dim rounded-full px-8 py-4 font-manrope font-semibold text-lg shadow-[0_0_30px_rgba(212,175,55,0.4)] hover:shadow-[0_0_50px_rgba(212,175,55,0.6)] hover:scale-105 transition-all opacity-0 animate-fade-in-up"
+        style={{ animationDelay: "0.8s", animationFillMode: "forwards" }}
+        data-testid="hero-cta-btn"
+      >
+        <Calendar className="w-5 h-5" />
+        Ücretsiz Danışmanlık Randevusu Al
+      </a>
 
       {/* Scroll Indicator */}
       <a 
@@ -755,10 +769,12 @@ function App() {
 
   return (
     <div className="App bg-academic-navy min-h-screen">
+      <StickyHeader />
       <HeroSection />
       <ServicesSection />
       <ContactSection />
       <Footer />
+      <WhatsAppButton />
     </div>
   );
 }
