@@ -3,8 +3,12 @@ import "@/App.css";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ChevronDown, GraduationCap, Building2, Users, BookOpen, Send, ArrowDown, Menu, X, MessageCircle, Calendar } from "lucide-react";
 
-// WhatsApp Number
+// WhatsApp Number and URL Helper
 const WHATSAPP_NUMBER = "905436619340";
+const getWhatsAppUrl = (message) => {
+  // Using api.whatsapp.com for better compatibility
+  return `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${encodeURIComponent(message)}`;
+};
 
 // FSS Akademi Logo URL
 const LOGO_URL = "https://customer-assets.emergentagent.com/job_0eba98ac-e02f-4df7-af03-a40a9b33d4a9/artifacts/tykox5io_Ekran%20g%C3%B6r%C3%BCnt%C3%BCs%C3%BC%202026-02-23%20042936.png";
@@ -184,7 +188,7 @@ const StickyHeader = () => {
             </a>
           ))}
           <a
-            href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Merhaba, ücretsiz danışmanlık randevusu almak istiyorum.")}`}
+            href={getWhatsAppUrl("Merhaba, ücretsiz danışmanlık randevusu almak istiyorum.")}
             target="_blank"
             rel="noopener noreferrer"
             className="btn-premium flex items-center gap-2 bg-academic-gold text-academic-navy hover:bg-academic-gold-dim rounded-full px-5 py-2.5 font-manrope font-semibold text-sm shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:shadow-[0_0_30px_rgba(212,175,55,0.5)] hover:scale-105"
@@ -224,7 +228,7 @@ const StickyHeader = () => {
             </a>
           ))}
           <a
-            href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Merhaba, ücretsiz danışmanlık randevusu almak istiyorum.")}`}
+            href={getWhatsAppUrl("Merhaba, ücretsiz danışmanlık randevusu almak istiyorum.")}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-2 bg-academic-gold text-academic-navy rounded-full px-5 py-3 font-manrope font-semibold text-sm mt-2"
