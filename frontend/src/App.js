@@ -12,7 +12,7 @@ const LOGO_URL = "https://customer-assets.emergentagent.com/job_0eba98ac-e02f-4d
 // Social Media Links
 const SOCIAL_LINKS = {
   youtube: "https://www.youtube.com/@fatihsellumm",
-  instagram: "https://www.instagram.com/fatihsellumm/",
+  instagram: "https://www.instagram.com/fssakademi?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==",
   twitter: "https://x.com/fatihsellumm",
   linkedin: "https://www.linkedin.com/in/fatih-selim-sell%C3%BCm-9713933b1/",
   tiktok: "https://www.tiktok.com/@fatihsellumm"
