@@ -409,14 +409,19 @@ const AcademicSection = () => {
                 </div>
               </AccordionTrigger>
               <AccordionContent className="px-6 pb-6">
-                <ul className="space-y-3">
+                <ul className="space-y-4">
                   {service.items.map((item, index) => (
                     <li 
                       key={index}
-                      className="flex items-start gap-3 text-slate-300 font-manrope"
+                      className="text-slate-300 font-manrope"
                     >
-                      <span className="w-1.5 h-1.5 bg-academic-gold rounded-full mt-2 flex-shrink-0" />
-                      {item}
+                      <div className="flex items-start gap-3">
+                        <span className="w-1.5 h-1.5 bg-academic-gold rounded-full mt-2 flex-shrink-0" />
+                        <div>
+                          <span className="font-semibold text-white">{item.name}</span>
+                          <p className="text-sm text-slate-400 mt-1 leading-relaxed">{item.desc}</p>
+                        </div>
+                      </div>
                     </li>
                   ))}
                 </ul>
@@ -470,14 +475,19 @@ const StudentSection = () => {
                 </div>
               </AccordionTrigger>
               <AccordionContent className="px-6 pb-6">
-                <ul className="space-y-3">
+                <ul className="space-y-4">
                   {service.items.map((item, index) => (
                     <li 
                       key={index}
-                      className="flex items-start gap-3 text-slate-600 font-manrope"
+                      className="text-slate-600 font-manrope"
                     >
-                      <span className="w-1.5 h-1.5 bg-student-amber rounded-full mt-2 flex-shrink-0" />
-                      {item}
+                      <div className="flex items-start gap-3">
+                        <span className="w-1.5 h-1.5 bg-student-amber rounded-full mt-2 flex-shrink-0" />
+                        <div>
+                          <span className="font-semibold text-slate-800">{item.name}</span>
+                          <p className="text-sm text-slate-500 mt-1 leading-relaxed">{item.desc}</p>
+                        </div>
+                      </div>
                     </li>
                   ))}
                 </ul>
