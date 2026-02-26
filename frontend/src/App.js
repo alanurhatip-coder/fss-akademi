@@ -337,6 +337,7 @@ const Footer = () => (
 const AdminLogin = ({ onLogin }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -362,10 +363,15 @@ const AdminLogin = ({ onLogin }) => {
           <p className="text-slate-400 text-sm mt-2">FSS Akademi Admin Panel</p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-6">
-          <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Kullanıcı Adı" className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:border-academic-gold focus:outline-none" required />
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Şifre" className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:border-academic-gold focus:outline-none" required />
-          {error && <p className="text-red-400 text-sm text-center">{error}</p>}
-          <button type="submit" disabled={loading} className="w-full bg-academic-gold text-academic-navy font-semibold py-3 rounded-lg hover:bg-academic-gold-dim disabled:opacity-50">{loading ? "Giriş yapılıyor..." : "Giriş Yap"}</button>
+          <input data-testid="admin-username-input" type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Kullanıcı Adı" className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:border-academic-gold focus:outline-none" required />
+          <div className="relative">
+            <input data-testid="admin-password-input" type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Şifre" className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 pr-12 text-white placeholder-slate-400 focus:border-academic-gold focus:outline-none" required />
+            <button data-testid="toggle-password-btn" type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-academic-gold p-1">
+              {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+            </button>
+          </div>
+          {error && <p data-testid="login-error" className="text-red-400 text-sm text-center">{error}</p>}
+          <button data-testid="admin-login-btn" type="submit" disabled={loading} className="w-full bg-academic-gold text-academic-navy font-semibold py-3 rounded-lg hover:bg-academic-gold-dim disabled:opacity-50">{loading ? "Giriş yapılıyor..." : "Giriş Yap"}</button>
         </form>
         <div className="mt-6 text-center"><a href="/" className="text-slate-500 hover:text-academic-gold text-sm">← Ana Sayfaya Dön</a></div>
       </div>
