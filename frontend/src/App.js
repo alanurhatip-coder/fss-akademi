@@ -717,6 +717,139 @@ const AdminSecuritySettings = () => {
   );
 };
 
+const AdminTeachers = () => {
+  const [teachers, setTeachers] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [editingTeacher, setEditingTeacher] = useState(null);
+  const [formData, setFormData] = useState({ name: "", title: "", bio: "", photoUrl: "", isActive: true, order: 0 });
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState({ type: "", text: "" });
+
+  useEffect(() => { fetchTeachers(); }, []);
+
+  const fetchTeachers = async () => {
+    try { const res = await fetch(`${API}/teachers`); setTeachers(await res.json()); } catch (err) { console.error(err); }
+  };
+
+  const showMsg = (type, text) => { setMessage({ type, text }); setTimeout(() => setMessage({ type: "", text: "" }), 3000); };
+
+  const handleSubmit = async () => {
+    if (!formData.name || !formData.title) { showMsg("error", "Ad ve ünvan zorunludur"); return; }
+    setLoading(true);
+    try {
+      const url = editingTeacher ? `${API}/teachers/${editingTeacher.id}` : `${API}/teachers`;
+      const method = editingTeacher ? "PUT" : "POST";
+      const res = await fetch(url, { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(formData) });
+      if (res.ok) {
+        showMsg("success", editingTeacher ? "Öğretmen güncellendi!" : "Öğretmen eklendi!");
+        setShowForm(false);
+        setEditingTeacher(null);
+        setFormData({ name: "", title: "", bio: "", photoUrl: "", isActive: true, order: 0 });
+        fetchTeachers();
+      }
+    } catch (err) { showMsg("error", "Bir hata oluştu"); }
+    finally { setLoading(false); }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Bu öğretmeni silmek istediğinizden emin misiniz?")) return;
+    try { await fetch(`${API}/teachers/${id}`, { method: "DELETE" }); showMsg("success", "Öğretmen silindi"); fetchTeachers(); }
+    catch (err) { showMsg("error", "Silme başarısız"); }
+  };
+
+  const handleEdit = (teacher) => {
+    setEditingTeacher(teacher);
+    setFormData({ name: teacher.name, title: teacher.title, bio: teacher.bio || "", photoUrl: teacher.photoUrl || "", isActive: teacher.isActive !== false, order: teacher.order || 0 });
+    setShowForm(true);
+  };
+
+  return (
+    <div data-testid="admin-teachers" className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div><h1 className="text-2xl font-bold text-white">Öğretmenlerimiz</h1><p className="text-slate-400 mt-1">Öğretmen kadronuzu yönetin.</p></div>
+        <button data-testid="add-teacher-btn" onClick={() => { setShowForm(true); setEditingTeacher(null); setFormData({ name: "", title: "", bio: "", photoUrl: "", isActive: true, order: 0 }); }} className="flex items-center gap-2 bg-academic-gold text-academic-navy px-4 py-2 rounded-lg font-semibold hover:bg-academic-gold-dim">
+          <Plus className="w-5 h-5" /> Yeni Öğretmen
+        </button>
+      </div>
+      {message.text && <div className={`p-4 rounded-lg ${message.type === "success" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"}`}>{message.text}</div>}
+      {showForm && (
+        <div data-testid="teacher-form" className="bg-slate-800 rounded-2xl p-6 border border-slate-700">
+          <h2 className="text-lg font-semibold text-white mb-4">{editingTeacher ? "Öğretmen Düzenle" : "Yeni Öğretmen Ekle"}</h2>
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="text-slate-400 text-sm block mb-2">Ad Soyad *</label>
+                <input data-testid="teacher-name-input" type="text" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} placeholder="Öğretmen adı" className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:border-academic-gold focus:outline-none" />
+              </div>
+              <div>
+                <label className="text-slate-400 text-sm block mb-2">Ünvan / Branş *</label>
+                <input data-testid="teacher-title-input" type="text" value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} placeholder="Örn: Matematik Öğretmeni" className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:border-academic-gold focus:outline-none" />
+              </div>
+            </div>
+            <div>
+              <label className="text-slate-400 text-sm block mb-2">Fotoğraf URL</label>
+              <input data-testid="teacher-photo-input" type="url" value={formData.photoUrl} onChange={(e) => setFormData({...formData, photoUrl: e.target.value})} placeholder="https://..." className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:border-academic-gold focus:outline-none" />
+              {formData.photoUrl && <img src={formData.photoUrl} alt="Önizleme" className="mt-2 w-20 h-20 rounded-full object-cover border-2 border-academic-gold/30" />}
+            </div>
+            <div>
+              <label className="text-slate-400 text-sm block mb-2">Biyografi</label>
+              <textarea data-testid="teacher-bio-input" value={formData.bio} onChange={(e) => setFormData({...formData, bio: e.target.value})} placeholder="Öğretmen hakkında kısa bilgi..." rows={3} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:border-academic-gold focus:outline-none resize-none" />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="text-slate-400 text-sm block mb-2">Sıralama</label>
+                <input type="number" value={formData.order} onChange={(e) => setFormData({...formData, order: parseInt(e.target.value) || 0})} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:border-academic-gold focus:outline-none" />
+              </div>
+              <div className="flex items-end">
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input type="checkbox" checked={formData.isActive} onChange={(e) => setFormData({...formData, isActive: e.target.checked})} className="w-5 h-5 rounded border-slate-600 bg-slate-700 text-academic-gold focus:ring-academic-gold" />
+                  <span className="text-slate-300">Aktif (Sitede görünsün)</span>
+                </label>
+              </div>
+            </div>
+            <div className="flex justify-end gap-3 pt-2">
+              <button onClick={() => { setShowForm(false); setEditingTeacher(null); }} className="px-4 py-2 rounded-lg bg-slate-700 text-white hover:bg-slate-600">İptal</button>
+              <button data-testid="teacher-save-btn" onClick={handleSubmit} disabled={loading} className="px-4 py-2 rounded-lg bg-academic-gold text-academic-navy font-semibold hover:bg-academic-gold-dim disabled:opacity-50">{loading ? "Kaydediliyor..." : "Kaydet"}</button>
+            </div>
+          </div>
+        </div>
+      )}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {teachers.length === 0 ? (
+          <div className="col-span-full bg-slate-800 rounded-2xl p-12 border border-slate-700 text-center">
+            <UserCheck className="w-12 h-12 text-slate-600 mx-auto mb-4" />
+            <p className="text-slate-500">Henüz öğretmen eklenmemiş</p>
+          </div>
+        ) : teachers.map((teacher) => (
+          <div key={teacher.id} data-testid={`teacher-card-${teacher.id}`} className="bg-slate-800 rounded-2xl p-6 border border-slate-700 hover:border-slate-600 transition-all">
+            <div className="flex flex-col items-center text-center">
+              {teacher.photoUrl ? (
+                <img src={teacher.photoUrl} alt={teacher.name} className="w-20 h-20 rounded-full object-cover border-3 border-academic-gold/30 mb-4" />
+              ) : (
+                <div className="w-20 h-20 rounded-full bg-slate-700 border-3 border-academic-gold/30 mb-4 flex items-center justify-center">
+                  <UserCheck className="w-8 h-8 text-academic-gold/50" />
+                </div>
+              )}
+              <h3 className="font-semibold text-white">{teacher.name}</h3>
+              <p className="text-academic-gold text-sm mt-1">{teacher.title}</p>
+              {teacher.bio && <p className="text-slate-400 text-sm mt-2 line-clamp-2">{teacher.bio}</p>}
+              <div className="flex items-center gap-2 mt-3">
+                <span className={`px-2 py-1 rounded text-xs ${teacher.isActive !== false ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}`}>
+                  {teacher.isActive !== false ? 'Aktif' : 'Pasif'}
+                </span>
+              </div>
+              <div className="flex gap-2 mt-4">
+                <button data-testid={`edit-teacher-${teacher.id}`} onClick={() => handleEdit(teacher)} className="p-2 rounded-lg bg-slate-700 text-slate-300 hover:bg-slate-600"><Edit className="w-4 h-4" /></button>
+                <button data-testid={`delete-teacher-${teacher.id}`} onClick={() => handleDelete(teacher.id)} className="p-2 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30"><Trash2 className="w-4 h-4" /></button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 const AdminPanel = ({ onLogout }) => {
   const [activeView, setActiveView] = useState("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(true);
