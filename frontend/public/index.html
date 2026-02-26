@@ -187,5 +187,12 @@
                 },
             });
         </script>
+        <script>
+            (function(){
+                function hideBadge(){var b=document.getElementById('emergent-badge');if(b){b.style.setProperty('display','none','important');b.style.setProperty('visibility','hidden','important')}}
+                hideBadge();document.addEventListener('DOMContentLoaded',hideBadge);
+                new MutationObserver(hideBadge).observe(document.body||document.documentElement,{childList:true,subtree:true});
+            })();
+        </script>
     </body>
 </html>
