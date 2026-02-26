@@ -223,9 +223,3 @@ input:focus, textarea:focus, select:focus {
 a, button, [role="button"] {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-
-/* Hide Emergent badge */
-#emergent-badge {
-    display: none !important;
-    visibility: hidden !important;
-}
