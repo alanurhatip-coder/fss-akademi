@@ -223,3 +223,11 @@ input:focus, textarea:focus, select:focus {
 a, button, [role="button"] {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+/* Hide Emergent badge */
+[data-emergent-badge],
+a[href*="emergentagent.com"][style*="position: fixed"],
+div[style*="position: fixed"][style*="bottom"]:has(a[href*="emergentagent.com"]) {
+    display: none !important;
+    visibility: hidden !important;
+}
