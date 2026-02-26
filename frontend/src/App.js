@@ -875,6 +875,7 @@ const AdminPanel = ({ onLogout }) => {
   const menuItems = [
     { id: "dashboard", label: "Dashboard", icon: <Home className="w-5 h-5" /> },
     { id: "contents", label: "Eğitim / İçerik", icon: <BookMarked className="w-5 h-5" /> },
+    { id: "teachers", label: "Öğretmenlerimiz", icon: <UserCheck className="w-5 h-5" /> },
     { id: "inbox", label: "Gelen Kutusu", icon: <Inbox className="w-5 h-5" />, badge: stats.unreadMessages },
     { id: "site-settings", label: "Site Ayarları", icon: <Settings className="w-5 h-5" /> },
     { id: "security", label: "Güvenlik", icon: <Shield className="w-5 h-5" /> }
