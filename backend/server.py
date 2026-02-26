@@ -509,6 +509,22 @@ async def create_message(message: MessageCreate):
     message_dict["isRead"] = False
     message_dict["createdAt"] = datetime.now(timezone.utc).isoformat()
     await db.messages.insert_one(message_dict)
+
+    # Forward to Web3Forms from backend (avoids CORS)
+    try:
+        import httpx
+        async with httpx.AsyncClient() as client:
+            await client.post("https://api.web3forms.com/submit", json={
+                "access_key": "c872519d-1773-45ee-9b8a-e3fce5c1ffcf",
+                "subject": "FSS Akademi - Yeni İletişim Formu",
+                "name": message.name,
+                "email": message.email,
+                "phone": message.phone or "",
+                "message": message.message
+            }, timeout=10)
+    except Exception as e:
+        logger.warning(f"Web3Forms forwarding failed: {e}")
+
     created = await db.messages.find_one({"id": message_dict["id"]}, {"_id": 0})
     return created
 
