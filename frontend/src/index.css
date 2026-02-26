@@ -225,9 +225,7 @@ a, button, [role="button"] {
 }
 
 /* Hide Emergent badge */
-[data-emergent-badge],
-a[href*="emergentagent.com"][style*="position: fixed"],
-div[style*="position: fixed"][style*="bottom"]:has(a[href*="emergentagent.com"]) {
+#emergent-badge {
     display: none !important;
     visibility: hidden !important;
 }
