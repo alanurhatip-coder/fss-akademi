@@ -260,10 +260,20 @@ const ContactSection = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...formData, subject: formData.category || "Genel" })
       });
-      // Also send via Web3Forms
-      const form = e.target;
-      const formDataToSend = new FormData(form);
-      await fetch("https://api.web3forms.com/submit", { method: "POST", body: formDataToSend });
+      // Also send via Web3Forms (JSON format for CORS compatibility)
+      await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          access_key: "c872519d-1773-45ee-9b8a-e3fce5c1ffcf",
+          subject: "FSS Akademi - Yeni İletişim Formu",
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          category: formData.category,
+          message: formData.message
+        })
+      });
       setSubmitStatus("success");
       setFormData({ name: "", email: "", phone: "", category: "", message: "" });
     } catch (error) {
