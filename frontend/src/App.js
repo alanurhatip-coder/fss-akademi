@@ -210,6 +210,41 @@ const CustomSectionsDisplay = ({ sections }) => {
   ));
 };
 
+const TeachersSection = ({ teachers }) => {
+  if (!teachers?.length) return null;
+  return (
+    <section id="teachers" className="mesh-gradient-dark py-20 md:py-28 px-6 md:px-12">
+      <div className="max-w-6xl mx-auto">
+        <div className="text-center mb-16">
+          <span className="font-space text-xs tracking-[0.3em] text-academic-gold uppercase mb-4 block">Ekibimiz</span>
+          <h2 className="font-playfair text-3xl md:text-4xl lg:text-5xl text-white mb-4">
+            <span className="text-gradient-gold italic">Öğretmenlerimiz</span>
+          </h2>
+          <p className="font-manrope text-slate-400 max-w-2xl mx-auto">Alanında uzman, deneyimli eğitim kadromuzla tanışın.</p>
+        </div>
+        <div className={`grid gap-8 ${teachers.length === 1 ? 'max-w-sm mx-auto' : teachers.length === 2 ? 'grid-cols-1 md:grid-cols-2 max-w-3xl mx-auto' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'}`}>
+          {teachers.map((teacher, index) => (
+            <div key={teacher.id} className="glass-dark rounded-2xl p-6 border border-academic-gold/20 hover:border-academic-gold/40 transition-all duration-300 group opacity-0 animate-fade-in-up" style={{ animationDelay: `${0.2 + index * 0.15}s`, animationFillMode: "forwards" }}>
+              <div className="flex flex-col items-center text-center">
+                {teacher.photoUrl ? (
+                  <img src={teacher.photoUrl} alt={teacher.name} className="w-28 h-28 rounded-full object-cover border-4 border-academic-gold/30 group-hover:border-academic-gold/60 transition-all mb-5" />
+                ) : (
+                  <div className="w-28 h-28 rounded-full bg-academic-navy-light border-4 border-academic-gold/30 group-hover:border-academic-gold/60 transition-all mb-5 flex items-center justify-center">
+                    <UserCheck className="w-10 h-10 text-academic-gold/60" />
+                  </div>
+                )}
+                <h3 className="font-playfair text-xl text-white group-hover:text-academic-gold transition-colors">{teacher.name}</h3>
+                <p className="font-space text-xs tracking-wider text-academic-gold mt-1 uppercase">{teacher.title}</p>
+                {teacher.bio && <p className="font-manrope text-sm text-slate-400 mt-4 leading-relaxed">{teacher.bio}</p>}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
 const ContactSection = () => {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", category: "", message: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
