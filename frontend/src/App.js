@@ -949,11 +949,13 @@ const HomePage = () => {
   const [academicServices, setAcademicServices] = useState([]);
   const [studentServices, setStudentServices] = useState([]);
   const [customSections, setCustomSections] = useState([]);
+  const [teachers, setTeachers] = useState([]);
 
   useEffect(() => {
     fetchAbout();
     fetchServices();
     fetchCustomSections();
+    fetchTeachers();
   }, []);
 
   const fetchAbout = async () => {
