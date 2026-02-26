@@ -548,6 +548,46 @@ async def update_site_settings(update: SiteSettingsUpdate):
         await db.site_settings.insert_one(update_data)
     return {"success": True, "message": "Site ayarları güncellendi"}
 
+# ==================== TEACHERS ====================
+
+@api_router.get("/teachers")
+async def get_teachers():
+    teachers = await db.teachers.find({}, {"_id": 0}).to_list(100)
+    teachers.sort(key=lambda x: x.get("order", 0))
+    return teachers
+
+@api_router.get("/teachers/active")
+async def get_active_teachers():
+    teachers = await db.teachers.find({"isActive": True}, {"_id": 0}).to_list(100)
+    teachers.sort(key=lambda x: x.get("order", 0))
+    return teachers
+
+@api_router.post("/teachers")
+async def create_teacher(teacher: TeacherCreate):
+    teacher_dict = teacher.model_dump()
+    teacher_dict["id"] = str(uuid.uuid4())
+    teacher_dict["createdAt"] = datetime.now(timezone.utc).isoformat()
+    await db.teachers.insert_one(teacher_dict)
+    created = await db.teachers.find_one({"id": teacher_dict["id"]}, {"_id": 0})
+    return created
+
+@api_router.put("/teachers/{teacher_id}")
+async def update_teacher(teacher_id: str, update: TeacherUpdate):
+    teacher = await db.teachers.find_one({"id": teacher_id})
+    if not teacher:
+        raise HTTPException(status_code=404, detail="Öğretmen bulunamadı")
+    update_data = {k: v for k, v in update.model_dump().items() if v is not None}
+    if update_data:
+        await db.teachers.update_one({"id": teacher_id}, {"$set": update_data})
+    return {"success": True, "message": "Öğretmen güncellendi"}
+
+@api_router.delete("/teachers/{teacher_id}")
+async def delete_teacher(teacher_id: str):
+    result = await db.teachers.delete_one({"id": teacher_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Öğretmen bulunamadı")
+    return {"success": True, "message": "Öğretmen silindi"}
+
 # ==================== APP SETUP ====================
 
 app.include_router(api_router)
