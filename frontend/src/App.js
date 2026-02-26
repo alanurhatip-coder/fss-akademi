@@ -380,7 +380,7 @@ const AdminDashboard = ({ stats, recentMessages, recentContents, setActiveView }
       <h1 className="text-2xl font-bold text-white mb-2">Dashboard</h1>
       <p className="text-slate-400">FSS Akademi yönetim paneline hoş geldiniz.</p>
     </div>
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl p-6 shadow-lg">
         <div className="flex items-center justify-between">
           <div><p className="text-blue-200 text-sm">Toplam İçerik</p><p className="text-3xl font-bold text-white mt-1">{stats.totalContents}</p></div>
@@ -397,6 +397,12 @@ const AdminDashboard = ({ stats, recentMessages, recentContents, setActiveView }
         <div className="flex items-center justify-between">
           <div><p className="text-green-200 text-sm">Toplam Görüntüleme</p><p className="text-3xl font-bold text-white mt-1">{stats.totalViews}</p></div>
           <div className="w-12 h-12 bg-green-400/30 rounded-xl flex items-center justify-center"><Eye className="w-6 h-6 text-white" /></div>
+        </div>
+      </div>
+      <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-6 shadow-lg">
+        <div className="flex items-center justify-between">
+          <div><p className="text-purple-200 text-sm">Öğretmenler</p><p className="text-3xl font-bold text-white mt-1">{stats.totalTeachers || 0}</p></div>
+          <div className="w-12 h-12 bg-purple-400/30 rounded-xl flex items-center justify-center"><UserCheck className="w-6 h-6 text-white" /></div>
         </div>
       </div>
     </div>
