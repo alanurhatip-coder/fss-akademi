@@ -610,9 +610,28 @@ async def delete_teacher(teacher_id: str):
         raise HTTPException(status_code=404, detail="Öğretmen bulunamadı")
     return {"success": True, "message": "Öğretmen silindi"}
 
+# ==================== FILE UPLOAD ====================
+
+UPLOAD_DIR = ROOT_DIR / "uploads"
+UPLOAD_DIR.mkdir(exist_ok=True)
+
+@api_router.post("/upload")
+async def upload_file(file: UploadFile = FastAPIFile(...)):
+    ext = Path(file.filename).suffix.lower()
+    if ext not in [".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg"]:
+        raise HTTPException(status_code=400, detail="Desteklenmeyen dosya formatı")
+    filename = f"{uuid.uuid4().hex}{ext}"
+    filepath = UPLOAD_DIR / filename
+    with open(filepath, "wb") as f:
+        shutil.copyfileobj(file.file, f)
+    return {"url": f"/api/uploads/{filename}", "filename": filename}
+
 # ==================== APP SETUP ====================
 
 app.include_router(api_router)
+
+# Serve uploaded files
+app.mount("/api/uploads", StaticFiles(directory=str(UPLOAD_DIR)), name="uploads")
 
 app.add_middleware(
     CORSMiddleware,
