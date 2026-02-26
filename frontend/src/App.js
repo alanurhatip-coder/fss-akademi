@@ -919,6 +919,7 @@ const AdminPanel = ({ onLogout }) => {
         <main className="flex-1 p-6 overflow-auto">
           {activeView === "dashboard" && <AdminDashboard stats={stats} recentMessages={recentMessages} recentContents={recentContents} setActiveView={setActiveView} />}
           {activeView === "contents" && <AdminContents />}
+          {activeView === "teachers" && <AdminTeachers />}
           {activeView === "inbox" && <AdminInbox />}
           {activeView === "site-settings" && <AdminSiteSettings />}
           {activeView === "security" && <AdminSecuritySettings />}
