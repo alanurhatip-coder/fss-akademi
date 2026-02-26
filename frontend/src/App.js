@@ -975,12 +975,17 @@ const HomePage = () => {
     try { const res = await fetch(`${API}/custom-sections/active`); setCustomSections(await res.json()); } catch (err) { setCustomSections([]); }
   };
 
+  const fetchTeachers = async () => {
+    try { const res = await fetch(`${API}/teachers/active`); setTeachers(await res.json()); } catch (err) { setTeachers([]); }
+  };
+
   return (
     <div className="App bg-academic-navy min-h-screen">
       <StickyHeader />
       <HeroSection aboutContent={aboutContent} />
       <DynamicServicesSection academicServices={academicServices} studentServices={studentServices} />
       <CustomSectionsDisplay sections={customSections} />
+      <TeachersSection teachers={teachers} />
       <ContactSection />
       <Footer />
       <WhatsAppButton />
