@@ -261,7 +261,7 @@ const WhatsAppButton = () => {
 
   return (
     <a
-      href={WHATSAPP_URL}
+      href="https://wa.me/905309482654?text=Merhaba,%20FSS%20Akademi%20eğitimleri%20hakkında%20bilgi%20almak%20istiyorum."
       target="_blank"
       rel="noopener noreferrer"
       className={`fixed bottom-24 right-6 z-40 flex items-center gap-3 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-[0_4px_20px_rgba(34,197,94,0.4)] hover:shadow-[0_4px_30px_rgba(34,197,94,0.6)] transition-all duration-300 hover:scale-105 ${
