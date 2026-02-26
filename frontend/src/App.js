@@ -4,7 +4,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { ChevronDown, GraduationCap, Building2, Users, BookOpen, Send, ArrowDown, Menu, X, MessageCircle, Calendar } from "lucide-react";
 
 // WhatsApp URL
-const WHATSAPP_URL = "https://wa.me/905309482654";
+const WHATSAPP_URL = "https://api.whatsapp.com/send?phone=905309482654&text=Merhaba,%20FSS%20Akademi%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum.";
 
 // FSS Akademi Logo URL
 const LOGO_URL = "https://customer-assets.emergentagent.com/job_0eba98ac-e02f-4df7-af03-a40a9b33d4a9/artifacts/tykox5io_Ekran%20g%C3%B6r%C3%BCnt%C3%BCs%C3%BC%202026-02-23%20042936.png";
@@ -261,7 +261,7 @@ const WhatsAppButton = () => {
 
   return (
     <a
-      href="https://wa.me/905309482654"
+      href="https://api.whatsapp.com/send?phone=905309482654&text=Merhaba,%20FSS%20Akademi%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum."
       target="_blank"
       rel="noopener noreferrer"
       className={`fixed bottom-24 right-6 z-40 flex items-center gap-3 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-[0_4px_20px_rgba(34,197,94,0.4)] hover:shadow-[0_4px_30px_rgba(34,197,94,0.6)] transition-all duration-300 hover:scale-105 ${
