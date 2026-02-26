@@ -123,6 +123,23 @@ class SiteSettingsUpdate(BaseModel):
     faviconUrl: Optional[str] = None
     whatsappNumber: Optional[str] = None
 
+# Teachers
+class TeacherCreate(BaseModel):
+    name: str
+    title: str
+    bio: Optional[str] = None
+    photoUrl: Optional[str] = None
+    isActive: bool = True
+    order: int = 0
+
+class TeacherUpdate(BaseModel):
+    name: Optional[str] = None
+    title: Optional[str] = None
+    bio: Optional[str] = None
+    photoUrl: Optional[str] = None
+    isActive: Optional[bool] = None
+    order: Optional[int] = None
+
 # ==================== DEFAULT DATA ====================
 
 DEFAULT_ACADEMIC_SERVICES = [
