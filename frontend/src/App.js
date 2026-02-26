@@ -756,7 +756,7 @@ const AdminPanel = ({ onLogout }) => {
           )}
         </div>
       </div>
-    </footer>
+    </div>
   );
 };
 
