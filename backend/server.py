@@ -509,7 +509,8 @@ async def create_message(message: MessageCreate):
     message_dict["isRead"] = False
     message_dict["createdAt"] = datetime.now(timezone.utc).isoformat()
     await db.messages.insert_one(message_dict)
-    return message_dict
+    created = await db.messages.find_one({"id": message_dict["id"]}, {"_id": 0})
+    return created
 
 @api_router.put("/messages/{message_id}")
 async def update_message(message_id: str, update: MessageUpdate):
