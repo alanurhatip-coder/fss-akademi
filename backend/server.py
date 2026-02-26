@@ -321,6 +321,7 @@ async def get_admin_settings():
 async def get_dashboard_stats():
     total_contents = await db.contents.count_documents({})
     unread_messages = await db.messages.count_documents({"isRead": False})
+    total_teachers = await db.teachers.count_documents({})
     
     # Calculate total views
     contents = await db.contents.find({}, {"views": 1, "_id": 0}).to_list(1000)
@@ -329,7 +330,8 @@ async def get_dashboard_stats():
     return {
         "totalContents": total_contents,
         "unreadMessages": unread_messages,
-        "totalViews": total_views
+        "totalViews": total_views,
+        "totalTeachers": total_teachers
     }
 
 @api_router.get("/dashboard/recent-messages")
