@@ -387,7 +387,8 @@ async def create_service(service: ServiceCreate):
     service_dict = service.model_dump()
     service_dict["id"] = str(uuid.uuid4())
     await db.services.insert_one(service_dict)
-    return service_dict
+    created = await db.services.find_one({"id": service_dict["id"]}, {"_id": 0})
+    return created
 
 @api_router.put("/services/{service_id}")
 async def update_service(service_id: str, update: ServiceUpdate):
@@ -425,7 +426,8 @@ async def create_custom_section(section: CustomSectionCreate):
     section_dict = section.model_dump()
     section_dict["id"] = str(uuid.uuid4())
     await db.custom_sections.insert_one(section_dict)
-    return section_dict
+    created = await db.custom_sections.find_one({"id": section_dict["id"]}, {"_id": 0})
+    return created
 
 @api_router.put("/custom-sections/{section_id}")
 async def update_custom_section(section_id: str, update: CustomSectionUpdate):
@@ -468,7 +470,8 @@ async def create_content(content: ContentCreate):
     content_dict["views"] = 0
     content_dict["createdAt"] = datetime.now(timezone.utc).isoformat()
     await db.contents.insert_one(content_dict)
-    return content_dict
+    created = await db.contents.find_one({"id": content_dict["id"]}, {"_id": 0})
+    return created
 
 @api_router.put("/contents/{content_id}")
 async def update_content(content_id: str, update: ContentUpdate):
