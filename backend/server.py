@@ -267,6 +267,16 @@ async def init_default_data():
             await db.messages.insert_one(msg)
         logger.info("Sample messages created")
 
+    # Default Teachers
+    teachers_count = await db.teachers.count_documents({})
+    if teachers_count == 0:
+        default_teachers = [
+            {"id": str(uuid.uuid4()), "name": "Fatih Selim Sellüm", "title": "Kurucu & Eğitim Danışmanı", "bio": "Matematik eğitimi ve akademik danışmanlık alanında uzman. TÜBİTAK ve Erasmus projeleri konusunda deneyimli.", "photoUrl": "", "isActive": True, "order": 0, "createdAt": datetime.now(timezone.utc).isoformat()},
+        ]
+        for teacher in default_teachers:
+            await db.teachers.insert_one(teacher)
+        logger.info("Default teachers created")
+
 # ==================== BASIC ROUTES ====================
 
 @api_router.get("/")
