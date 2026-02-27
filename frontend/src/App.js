@@ -204,9 +204,9 @@ const DynamicServicesSection = ({ academicServices, studentServices, siteTexts =
     <div className="lg:w-1/2 bg-gradient-to-br from-amber-50 to-orange-100 relative overflow-hidden py-16 md:py-24 px-6 md:px-12 lg:px-16">
       <div className="absolute top-10 right-10 w-40 h-40 bg-amber-200/30 rounded-full blur-3xl" />
       <div className="relative z-10 max-w-xl mx-auto lg:mx-0 lg:ml-auto">
-        <span className="font-space text-xs tracking-[0.3em] text-student-amber-dark uppercase mb-4 block">Bireysel Gelişim</span>
-        <h2 className="font-playfair text-3xl md:text-4xl lg:text-5xl text-slate-800 mb-4">Veliler & <span className="text-student-amber-dark italic">Öğrenciler</span></h2>
-        <p className="font-manrope text-slate-600 mb-10">Çocuklarınızın matematik becerilerini geliştirmek için kapsamlı programlar.</p>
+        <span className="font-space text-xs tracking-[0.3em] text-student-amber-dark uppercase mb-4 block">{siteTexts.studentLabel || "Bireysel Gelişim"}</span>
+        <h2 className="font-playfair text-3xl md:text-4xl lg:text-5xl text-slate-800 mb-4">{(siteTexts.studentTitle || "Veliler & Öğrenciler").split("&").length > 1 ? <>{(siteTexts.studentTitle || "Veliler & Öğrenciler").split("&")[0]}& <span className="text-student-amber-dark italic">{(siteTexts.studentTitle || "Veliler & Öğrenciler").split("&")[1]}</span></> : <span className="text-student-amber-dark italic">{siteTexts.studentTitle || "Veliler & Öğrenciler"}</span>}</h2>
+        <p className="font-manrope text-slate-600 mb-10">{siteTexts.studentDesc || "Çocuklarınızın matematik becerilerini geliştirmek için kapsamlı programlar."}</p>
         <Accordion type="single" collapsible className="space-y-4">
           {studentServices.map((service) => (
             <AccordionItem key={service.id} value={service.id} className="glass-light rounded-2xl border-white/40 hover:shadow-lg overflow-hidden">
