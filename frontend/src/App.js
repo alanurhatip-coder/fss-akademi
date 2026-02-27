@@ -720,9 +720,9 @@ const AdminSiteSettings = () => {
           </div>
         </div>
         <div className="border-t border-slate-700 pt-6"><h2 className="text-lg font-semibold text-white mb-4">Görseller</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div><label className="text-slate-400 text-sm block mb-2">Logo URL</label><input type="url" value={settings.logoUrl || ""} onChange={(e) => setSettings({...settings, logoUrl: e.target.value})} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:border-academic-gold focus:outline-none" />{settings.logoUrl && <img src={settings.logoUrl} alt="Logo" className="mt-2 w-16 h-16 rounded-lg object-cover" />}</div>
-            <div><label className="text-slate-400 text-sm block mb-2">Favicon URL</label><input type="url" value={settings.faviconUrl || ""} onChange={(e) => setSettings({...settings, faviconUrl: e.target.value})} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:border-academic-gold focus:outline-none" />{settings.faviconUrl && <img src={settings.faviconUrl} alt="Favicon" className="mt-2 w-8 h-8 rounded" />}</div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <ImageUploader value={settings.logoUrl || ""} onChange={(url) => setSettings({...settings, logoUrl: url})} label="Logo" shape="circle" />
+            <ImageUploader value={settings.faviconUrl || ""} onChange={(url) => setSettings({...settings, faviconUrl: url})} label="Favicon" />
           </div>
         </div>
         <div className="pt-4"><button onClick={handleSave} disabled={loading} className="flex items-center gap-2 bg-academic-gold text-academic-navy px-6 py-3 rounded-lg font-semibold hover:bg-academic-gold-dim disabled:opacity-50"><Save className="w-5 h-5" /> {loading ? "Kaydediliyor..." : "Ayarları Kaydet"}</button></div>
