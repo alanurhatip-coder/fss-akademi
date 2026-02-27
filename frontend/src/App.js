@@ -1163,14 +1163,18 @@ const HomePage = () => {
     try { const res = await fetch(`${API}/contents/active/list`); setContents(await res.json()); } catch (err) { setContents([]); }
   };
 
+  const fetchSiteTexts = async () => {
+    try { const res = await fetch(`${API}/site-texts`); setSiteTexts(await res.json()); } catch (err) { setSiteTexts({}); }
+  };
+
   return (
     <div className="App bg-academic-navy min-h-screen">
       <StickyHeader />
-      <HeroSection aboutContent={aboutContent} />
-      <DynamicServicesSection academicServices={academicServices} studentServices={studentServices} />
+      <HeroSection aboutContent={aboutContent} siteTexts={siteTexts} />
+      <DynamicServicesSection academicServices={academicServices} studentServices={studentServices} siteTexts={siteTexts} />
       <CustomSectionsDisplay sections={customSections} />
       <ContentsSection contents={contents} />
-      <TeachersSection teachers={teachers} />
+      <TeachersSection teachers={teachers} siteTexts={siteTexts} />
       <ContactSection />
       <Footer />
       <WhatsAppButton />
