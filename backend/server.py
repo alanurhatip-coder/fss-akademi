@@ -292,6 +292,25 @@ async def init_default_data():
             await db.teachers.insert_one(teacher)
         logger.info("Default teachers created")
 
+    # Default Site Texts
+    site_texts = await db.site_texts.find_one({})
+    if not site_texts:
+        default_texts = {
+            "heroTitle": "Biz Kimiz?",
+            "heroSubtitle": "Başarı yolculuğunuzda güvenilir yol arkadaşınız olmaktan gurur duyuyoruz.",
+            "academicLabel": "Profesyonel Eğitim",
+            "academicTitle": "Akademik & Kurumsal",
+            "academicDesc": "Araştırmacılar, akademisyenler ve kurumlar için profesyonel eğitim programları.",
+            "studentLabel": "Bireysel Gelişim",
+            "studentTitle": "Veliler & Öğrenciler",
+            "studentDesc": "Çocuklarınızın matematik becerilerini geliştirmek için kapsamlı programlar.",
+            "teachersLabel": "Ekibimiz",
+            "teachersTitle": "Öğretmenlerimiz",
+            "teachersDesc": "Alanında uzman, deneyimli eğitim kadromuzla tanışın."
+        }
+        await db.site_texts.insert_one(default_texts)
+        logger.info("Default site texts created")
+
 # ==================== BASIC ROUTES ====================
 
 @api_router.get("/")
