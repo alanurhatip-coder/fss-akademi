@@ -527,12 +527,17 @@ async def create_message(message: MessageCreate):
         async with httpx.AsyncClient() as client:
             await client.post("https://api.web3forms.com/submit", json={
                 "access_key": "c872519d-1773-45ee-9b8a-e3fce5c1ffcf",
-                "subject": "FSS Akademi - Yeni İletişim Formu",
+                "subject": f"FSS Akademi - Yeni Mesaj: {message.name}",
+                "from_name": "FSS Akademi İletişim Formu",
+                "to": "fssakademi@gmail.com",
+                "replyto": message.email,
                 "name": message.name,
                 "email": message.email,
-                "phone": message.phone or "",
-                "message": message.message
+                "phone": message.phone or "Belirtilmedi",
+                "Konu": message.subject or "Genel",
+                "Mesaj": message.message
             }, timeout=10)
+            logger.info(f"Web3Forms email sent for message from {message.name}")
     except Exception as e:
         logger.warning(f"Web3Forms forwarding failed: {e}")
 
