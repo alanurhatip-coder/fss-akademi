@@ -595,6 +595,27 @@ async def update_site_settings(update: SiteSettingsUpdate):
         await db.site_settings.insert_one(update_data)
     return {"success": True, "message": "Site ayarları güncellendi"}
 
+# ==================== SITE TEXTS ====================
+
+@api_router.get("/site-texts")
+async def get_site_texts():
+    texts = await db.site_texts.find_one({}, {"_id": 0})
+    if not texts:
+        return {}
+    return texts
+
+@api_router.put("/site-texts")
+async def update_site_texts(update: SiteTextsUpdate):
+    update_data = {k: v for k, v in update.model_dump().items() if v is not None}
+    if not update_data:
+        return {"success": True, "message": "Değişiklik yok"}
+    texts = await db.site_texts.find_one({})
+    if texts:
+        await db.site_texts.update_one({}, {"$set": update_data})
+    else:
+        await db.site_texts.insert_one(update_data)
+    return {"success": True, "message": "Site metinleri güncellendi"}
+
 # ==================== TEACHERS ====================
 
 @api_router.get("/teachers")
