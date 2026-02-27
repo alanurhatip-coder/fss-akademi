@@ -553,12 +553,15 @@ const AdminContents = () => {
           <div className="space-y-4">
             <input type="text" value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} placeholder="İçerik Başlığı" className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:border-academic-gold focus:outline-none" />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <input type="url" value={formData.coverImage} onChange={(e) => setFormData({...formData, coverImage: e.target.value})} placeholder="Kapak Görseli URL" className="bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:border-academic-gold focus:outline-none" />
-              <select value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})} className="bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:border-academic-gold focus:outline-none">
+              <ImageUploader value={formData.coverImage} onChange={(url) => setFormData({...formData, coverImage: url})} label="Kapak Görseli" />
+              <div>
+                <label className="text-slate-400 text-sm block mb-2">Kategori</label>
+                <select value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:border-academic-gold focus:outline-none">
                 <option value="education">Eğitim</option>
                 <option value="announcement">Duyuru</option>
                 <option value="blog">Blog</option>
               </select>
+              </div>
             </div>
             <textarea value={formData.content} onChange={(e) => setFormData({...formData, content: e.target.value})} placeholder="İçerik metni..." rows={8} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:border-academic-gold focus:outline-none resize-none" />
             <div className="flex items-center justify-between">
