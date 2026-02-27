@@ -352,7 +352,7 @@ const ContactSection = () => {
         web3Data.append("email", formData.email);
         web3Data.append("phone", formData.phone || "Belirtilmedi");
         web3Data.append("message", formData.message);
-        await fetch("https://api.web3forms.com/submit", { method: "POST", body: web3Data });
+        await fetch("https://api.web3forms.com/submit", { method: "POST", body: web3Data, mode: "no-cors" });
       } catch (emailErr) { console.warn("Web3Forms email failed:", emailErr); }
       if (res.ok) {
         setSubmitStatus("success");
