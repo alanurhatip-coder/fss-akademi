@@ -1035,12 +1035,14 @@ const HomePage = () => {
   const [studentServices, setStudentServices] = useState([]);
   const [customSections, setCustomSections] = useState([]);
   const [teachers, setTeachers] = useState([]);
+  const [contents, setContents] = useState([]);
 
   useEffect(() => {
     fetchAbout();
     fetchServices();
     fetchCustomSections();
     fetchTeachers();
+    fetchContents();
   }, []);
 
   const fetchAbout = async () => {
