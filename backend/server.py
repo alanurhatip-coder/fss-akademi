@@ -456,6 +456,12 @@ async def get_contents():
     contents.sort(key=lambda x: x.get("createdAt", ""), reverse=True)
     return contents
 
+@api_router.get("/contents/active/list")
+async def get_active_contents():
+    contents = await db.contents.find({"status": "active"}, {"_id": 0}).to_list(100)
+    contents.sort(key=lambda x: x.get("createdAt", ""), reverse=True)
+    return contents
+
 @api_router.get("/contents/{content_id}")
 async def get_content(content_id: str):
     content = await db.contents.find_one({"id": content_id}, {"_id": 0})
