@@ -1102,6 +1102,7 @@ const AdminPanel = ({ onLogout }) => {
           {activeView === "contents" && <AdminContents />}
           {activeView === "teachers" && <AdminTeachers />}
           {activeView === "inbox" && <AdminInbox />}
+          {activeView === "site-texts" && <AdminSiteTexts />}
           {activeView === "site-settings" && <AdminSiteSettings />}
           {activeView === "security" && <AdminSecuritySettings />}
         </main>
