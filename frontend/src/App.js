@@ -154,10 +154,10 @@ const HeroSection = ({ aboutContent, siteTexts = {} }) => {
         <img src={LOGO_URL} alt="FSS Akademi Logo" className="w-32 h-32 md:w-40 md:h-40 rounded-full object-cover border-4 border-academic-gold/30" />
       </div>
       <h1 className="font-playfair text-4xl sm:text-5xl lg:text-6xl text-white text-center mb-8 opacity-0 animate-fade-in-up" style={{ animationDelay: "0.4s", animationFillMode: "forwards" }}>
-        <span className="text-gradient-gold italic">Biz Kimiz?</span>
+        <span className="text-gradient-gold italic">{siteTexts.heroTitle || "Biz Kimiz?"}</span>
       </h1>
       <p className="font-manrope text-base md:text-lg text-slate-300 text-center max-w-4xl leading-relaxed opacity-0 animate-fade-in-up px-4" style={{ animationDelay: "0.6s", animationFillMode: "forwards" }}>
-        {aboutContent}<span className="text-academic-gold font-medium"> Başarı yolculuğunuzda güvenilir yol arkadaşınız olmaktan gurur duyuyoruz.</span>
+        {aboutContent}<span className="text-academic-gold font-medium"> {siteTexts.heroSubtitle || "Başarı yolculuğunuzda güvenilir yol arkadaşınız olmaktan gurur duyuyoruz."}</span>
       </p>
       <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="mt-10 flex items-center gap-3 bg-academic-gold text-academic-navy rounded-full px-8 py-4 font-semibold text-lg opacity-0 animate-fade-in-up hover:bg-academic-gold-dim" style={{ animationDelay: "0.8s", animationFillMode: "forwards" }}>
         <Calendar className="w-5 h-5" />Ücretsiz Danışmanlık Randevusu Al
