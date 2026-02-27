@@ -142,6 +142,19 @@ class TeacherUpdate(BaseModel):
     isActive: Optional[bool] = None
     order: Optional[int] = None
 
+class SiteTextsUpdate(BaseModel):
+    heroTitle: Optional[str] = None
+    heroSubtitle: Optional[str] = None
+    academicLabel: Optional[str] = None
+    academicTitle: Optional[str] = None
+    academicDesc: Optional[str] = None
+    studentLabel: Optional[str] = None
+    studentTitle: Optional[str] = None
+    studentDesc: Optional[str] = None
+    teachersLabel: Optional[str] = None
+    teachersTitle: Optional[str] = None
+    teachersDesc: Optional[str] = None
+
 # ==================== DEFAULT DATA ====================
 
 DEFAULT_ACADEMIC_SERVICES = [
