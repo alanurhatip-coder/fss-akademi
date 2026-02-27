@@ -167,14 +167,14 @@ const HeroSection = ({ aboutContent, siteTexts = {} }) => {
   );
 };
 
-const DynamicServicesSection = ({ academicServices, studentServices }) => (
+const DynamicServicesSection = ({ academicServices, studentServices, siteTexts = {} }) => (
   <section id="services" className="flex flex-col lg:flex-row min-h-screen">
     <div className="lg:w-1/2 bg-academic-navy relative overflow-hidden py-16 md:py-24 px-6 md:px-12 lg:px-16">
       <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "url('https://images.pexels.com/photos/256477/pexels-photo-256477.jpeg')", backgroundSize: "cover" }} />
       <div className="relative z-10 max-w-xl mx-auto lg:mx-0">
-        <span className="font-space text-xs tracking-[0.3em] text-academic-gold uppercase mb-4 block">Profesyonel Eğitim</span>
-        <h2 className="font-playfair text-3xl md:text-4xl lg:text-5xl text-white mb-4">Akademik & <span className="text-gradient-gold italic">Kurumsal</span></h2>
-        <p className="font-manrope text-slate-400 mb-10">Araştırmacılar, akademisyenler ve kurumlar için profesyonel eğitim programları.</p>
+        <span className="font-space text-xs tracking-[0.3em] text-academic-gold uppercase mb-4 block">{siteTexts.academicLabel || "Profesyonel Eğitim"}</span>
+        <h2 className="font-playfair text-3xl md:text-4xl lg:text-5xl text-white mb-4">{(siteTexts.academicTitle || "Akademik & Kurumsal").split("&").length > 1 ? <>{(siteTexts.academicTitle || "Akademik & Kurumsal").split("&")[0]}& <span className="text-gradient-gold italic">{(siteTexts.academicTitle || "Akademik & Kurumsal").split("&")[1]}</span></> : <span className="text-gradient-gold italic">{siteTexts.academicTitle || "Akademik & Kurumsal"}</span>}</h2>
+        <p className="font-manrope text-slate-400 mb-10">{siteTexts.academicDesc || "Araştırmacılar, akademisyenler ve kurumlar için profesyonel eğitim programları."}</p>
         <Accordion type="single" collapsible className="space-y-4">
           {academicServices.map((service) => (
             <AccordionItem key={service.id} value={service.id} className="glass-dark rounded-sm border-academic-gold/20 hover:border-academic-gold/40 overflow-hidden">
