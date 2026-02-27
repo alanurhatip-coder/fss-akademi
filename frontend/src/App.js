@@ -252,6 +252,45 @@ const CustomSectionsDisplay = ({ sections }) => {
   ));
 };
 
+const ContentsSection = ({ contents }) => {
+  if (!contents?.length) return null;
+  const BACKEND_URL_BASE = process.env.REACT_APP_BACKEND_URL;
+  const getCategoryLabel = (cat) => ({ education: "Eğitim", announcement: "Duyuru", blog: "Blog" }[cat] || cat);
+  const formatDate = (d) => { try { return new Date(d).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" }); } catch { return ""; } };
+  return (
+    <section id="contents" className="mesh-gradient-dark py-20 md:py-28 px-6 md:px-12">
+      <div className="max-w-6xl mx-auto">
+        <div className="text-center mb-16">
+          <span className="font-space text-xs tracking-[0.3em] text-academic-gold uppercase mb-4 block">Haberler & Duyurular</span>
+          <h2 className="font-playfair text-3xl md:text-4xl lg:text-5xl text-white mb-4">
+            <span className="text-gradient-gold italic">Son İçerikler</span>
+          </h2>
+          <p className="font-manrope text-slate-400 max-w-2xl mx-auto">Eğitim dünyasından en güncel içerikler ve duyurular.</p>
+        </div>
+        <div className={`grid gap-6 ${contents.length === 1 ? 'max-w-lg mx-auto' : contents.length === 2 ? 'grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'}`}>
+          {contents.slice(0, 6).map((item, index) => (
+            <div key={item.id} className="glass-dark rounded-2xl overflow-hidden border border-academic-gold/10 hover:border-academic-gold/30 transition-all duration-300 group opacity-0 animate-fade-in-up" style={{ animationDelay: `${0.2 + index * 0.1}s`, animationFillMode: "forwards" }}>
+              {item.coverImage && (
+                <div className="aspect-video overflow-hidden">
+                  <img src={item.coverImage} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                </div>
+              )}
+              <div className="p-6">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-academic-gold/10 text-academic-gold border border-academic-gold/20">{getCategoryLabel(item.category)}</span>
+                  {item.createdAt && <span className="text-xs text-slate-500">{formatDate(item.createdAt)}</span>}
+                </div>
+                <h3 className="font-playfair text-lg text-white group-hover:text-academic-gold transition-colors mb-2 line-clamp-2">{item.title}</h3>
+                <p className="font-manrope text-sm text-slate-400 line-clamp-3">{item.content}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
 const TeachersSection = ({ teachers }) => {
   if (!teachers?.length) return null;
   return (
