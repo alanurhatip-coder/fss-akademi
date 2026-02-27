@@ -335,11 +335,29 @@ const ContactSection = () => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
+      // 1. Save to our database
       const res = await fetch(`${API}/messages`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...formData, subject: formData.category || "Genel" })
       });
+      // 2. Send email via Web3Forms (client-side, fssakademi@gmail.com)
+      try {
+        await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Accept": "application/json" },
+          body: JSON.stringify({
+            access_key: "c872519d-1773-45ee-9b8a-e3fce5c1ffcf",
+            subject: `FSS Akademi - Yeni Mesaj: ${formData.name}`,
+            from_name: "FSS Akademi İletişim Formu",
+            replyto: formData.email,
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone || "Belirtilmedi",
+            message: formData.message
+          })
+        });
+      } catch (emailErr) { console.warn("Web3Forms email failed:", emailErr); }
       if (res.ok) {
         setSubmitStatus("success");
         setFormData({ name: "", email: "", phone: "", category: "", message: "" });
