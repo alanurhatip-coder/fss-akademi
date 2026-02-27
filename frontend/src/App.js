@@ -784,6 +784,81 @@ const AdminSiteSettings = () => {
   );
 };
 
+const AdminSiteTexts = () => {
+  const [texts, setTexts] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState({ type: "", text: "" });
+
+  useEffect(() => { fetchTexts(); }, []);
+
+  const fetchTexts = async () => {
+    try { const res = await fetch(`${API}/site-texts`); setTexts(await res.json()); } catch (err) { console.error(err); }
+  };
+
+  const showMsg = (type, text) => { setMessage({ type, text }); setTimeout(() => setMessage({ type: "", text: "" }), 3000); };
+
+  const handleSave = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${API}/site-texts`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(texts) });
+      if (res.ok) showMsg("success", "Site metinleri güncellendi!"); else showMsg("error", "Güncelleme başarısız");
+    } catch (err) { showMsg("error", "Bağlantı hatası"); }
+    finally { setLoading(false); }
+  };
+
+  const Field = ({ label, field, rows }) => (
+    <div>
+      <label className="text-slate-400 text-sm block mb-2">{label}</label>
+      {rows ? (
+        <textarea value={texts[field] || ""} onChange={(e) => setTexts({...texts, [field]: e.target.value})} rows={rows} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:border-academic-gold focus:outline-none resize-none" />
+      ) : (
+        <input type="text" value={texts[field] || ""} onChange={(e) => setTexts({...texts, [field]: e.target.value})} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:border-academic-gold focus:outline-none" />
+      )}
+    </div>
+  );
+
+  return (
+    <div data-testid="admin-site-texts" className="space-y-6">
+      <div><h1 className="text-2xl font-bold text-white">Site Metinleri</h1><p className="text-slate-400 mt-1">Ana sayfadaki başlıkları ve açıklamaları düzenleyin.</p></div>
+      {message.text && <div className={`p-4 rounded-lg ${message.type === "success" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"}`}>{message.text}</div>}
+      <div className="space-y-6">
+        <div className="bg-slate-800 rounded-2xl p-6 border border-slate-700">
+          <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2"><Home className="w-5 h-5 text-academic-gold" /> Ana Sayfa (Hero)</h2>
+          <div className="space-y-4">
+            <Field label="Başlık (ör: Biz Kimiz?)" field="heroTitle" />
+            <Field label="Alt Yazı" field="heroSubtitle" rows={2} />
+          </div>
+        </div>
+        <div className="bg-slate-800 rounded-2xl p-6 border border-slate-700">
+          <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2"><Briefcase className="w-5 h-5 text-academic-gold" /> Akademik & Kurumsal Bölümü</h2>
+          <div className="space-y-4">
+            <Field label="Üst Etiket (ör: Profesyonel Eğitim)" field="academicLabel" />
+            <Field label="Başlık (ör: Akademik & Kurumsal)" field="academicTitle" />
+            <Field label="Açıklama" field="academicDesc" rows={2} />
+          </div>
+        </div>
+        <div className="bg-slate-800 rounded-2xl p-6 border border-slate-700">
+          <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2"><Users className="w-5 h-5 text-academic-gold" /> Veliler & Öğrenciler Bölümü</h2>
+          <div className="space-y-4">
+            <Field label="Üst Etiket (ör: Bireysel Gelişim)" field="studentLabel" />
+            <Field label="Başlık (ör: Veliler & Öğrenciler)" field="studentTitle" />
+            <Field label="Açıklama" field="studentDesc" rows={2} />
+          </div>
+        </div>
+        <div className="bg-slate-800 rounded-2xl p-6 border border-slate-700">
+          <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2"><UserCheck className="w-5 h-5 text-academic-gold" /> Öğretmenlerimiz Bölümü</h2>
+          <div className="space-y-4">
+            <Field label="Üst Etiket (ör: Ekibimiz)" field="teachersLabel" />
+            <Field label="Başlık (ör: Öğretmenlerimiz)" field="teachersTitle" />
+            <Field label="Açıklama" field="teachersDesc" rows={2} />
+          </div>
+        </div>
+        <button onClick={handleSave} disabled={loading} className="flex items-center gap-2 bg-academic-gold text-academic-navy px-6 py-3 rounded-lg font-semibold hover:bg-academic-gold-dim disabled:opacity-50"><Save className="w-5 h-5" /> {loading ? "Kaydediliyor..." : "Metinleri Kaydet"}</button>
+      </div>
+    </div>
+  );
+};
+
 const AdminSecuritySettings = () => {
   const [adminUsername, setAdminUsername] = useState("");
   const [newUsername, setNewUsername] = useState("");
