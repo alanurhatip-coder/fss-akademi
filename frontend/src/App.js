@@ -291,17 +291,17 @@ const ContentsSection = ({ contents }) => {
   );
 };
 
-const TeachersSection = ({ teachers }) => {
+const TeachersSection = ({ teachers, siteTexts = {} }) => {
   if (!teachers?.length) return null;
   return (
     <section id="teachers" className="mesh-gradient-dark py-20 md:py-28 px-6 md:px-12">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
-          <span className="font-space text-xs tracking-[0.3em] text-academic-gold uppercase mb-4 block">Ekibimiz</span>
+          <span className="font-space text-xs tracking-[0.3em] text-academic-gold uppercase mb-4 block">{siteTexts.teachersLabel || "Ekibimiz"}</span>
           <h2 className="font-playfair text-3xl md:text-4xl lg:text-5xl text-white mb-4">
-            <span className="text-gradient-gold italic">Öğretmenlerimiz</span>
+            <span className="text-gradient-gold italic">{siteTexts.teachersTitle || "Öğretmenlerimiz"}</span>
           </h2>
-          <p className="font-manrope text-slate-400 max-w-2xl mx-auto">Alanında uzman, deneyimli eğitim kadromuzla tanışın.</p>
+          <p className="font-manrope text-slate-400 max-w-2xl mx-auto">{siteTexts.teachersDesc || "Alanında uzman, deneyimli eğitim kadromuzla tanışın."}</p>
         </div>
         <div className={`grid gap-8 ${teachers.length === 1 ? 'max-w-sm mx-auto' : teachers.length === 2 ? 'grid-cols-1 md:grid-cols-2 max-w-3xl mx-auto' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'}`}>
           {teachers.map((teacher, index) => (
