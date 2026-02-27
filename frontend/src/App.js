@@ -33,6 +33,48 @@ const ICON_MAP = {
   book: <BookOpen className="w-5 h-5" />
 };
 
+const ImageUploader = ({ value, onChange, label, shape = "rounded" }) => {
+  const [uploading, setUploading] = useState(false);
+  const handleFileChange = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch(`${API}/upload`, { method: "POST", body: formData });
+      if (res.ok) {
+        const data = await res.json();
+        onChange(`${BACKEND_URL}${data.url}`);
+      }
+    } catch (err) { console.error("Upload failed:", err); }
+    finally { setUploading(false); }
+  };
+  const isCircle = shape === "circle";
+  return (
+    <div>
+      {label && <label className="text-slate-400 text-sm block mb-2">{label}</label>}
+      <div className="flex items-center gap-4">
+        {value ? (
+          <img src={value} alt="Önizleme" className={`${isCircle ? 'w-20 h-20 rounded-full' : 'w-24 h-16 rounded-lg'} object-cover border-2 border-academic-gold/30`} />
+        ) : (
+          <div className={`${isCircle ? 'w-20 h-20 rounded-full' : 'w-24 h-16 rounded-lg'} bg-slate-700 border-2 border-dashed border-slate-500 flex items-center justify-center`}>
+            <Image className="w-6 h-6 text-slate-500" />
+          </div>
+        )}
+        <div className="flex-1">
+          <label className="flex items-center gap-2 px-4 py-2.5 bg-slate-700 border border-slate-600 rounded-lg text-slate-300 hover:bg-slate-600 hover:text-white cursor-pointer transition-colors w-fit">
+            {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+            <span className="text-sm">{uploading ? "Yükleniyor..." : "Dosya Seç"}</span>
+            <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" disabled={uploading} />
+          </label>
+          {value && <button type="button" onClick={() => onChange("")} className="text-red-400 text-xs mt-1.5 hover:text-red-300">Görseli Kaldır</button>}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // ==================== FRONTEND COMPONENTS ====================
 
 const StickyHeader = () => {
