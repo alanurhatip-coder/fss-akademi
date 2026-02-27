@@ -1127,6 +1127,7 @@ const HomePage = () => {
   const [customSections, setCustomSections] = useState([]);
   const [teachers, setTeachers] = useState([]);
   const [contents, setContents] = useState([]);
+  const [siteTexts, setSiteTexts] = useState({});
 
   useEffect(() => {
     fetchAbout();
@@ -1134,6 +1135,7 @@ const HomePage = () => {
     fetchCustomSections();
     fetchTeachers();
     fetchContents();
+    fetchSiteTexts();
   }, []);
 
   const fetchAbout = async () => {
