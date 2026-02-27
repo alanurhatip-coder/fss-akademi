@@ -138,7 +138,7 @@ const WhatsAppButton = () => {
   );
 };
 
-const HeroSection = ({ aboutContent }) => {
+const HeroSection = ({ aboutContent, siteTexts = {} }) => {
   const [scrollY, setScrollY] = useState(0);
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
