@@ -524,20 +524,23 @@ async def create_message(message: MessageCreate):
     # Forward to Web3Forms from backend (avoids CORS)
     try:
         import httpx
+        email_body = (
+            f"Gönderen: {message.name}\n"
+            f"E-posta: {message.email}\n"
+            f"Telefon: {message.phone or 'Belirtilmedi'}\n"
+            f"Konu: {message.subject or 'Genel'}\n"
+            f"---\n"
+            f"{message.message}"
+        )
         async with httpx.AsyncClient() as client:
-            await client.post("https://api.web3forms.com/submit", json={
+            resp = await client.post("https://api.web3forms.com/submit", json={
                 "access_key": "c872519d-1773-45ee-9b8a-e3fce5c1ffcf",
                 "subject": f"FSS Akademi - Yeni Mesaj: {message.name}",
                 "from_name": "FSS Akademi İletişim Formu",
-                "to": "fssakademi@gmail.com",
                 "replyto": message.email,
-                "name": message.name,
-                "email": message.email,
-                "phone": message.phone or "Belirtilmedi",
-                "Konu": message.subject or "Genel",
-                "Mesaj": message.message
+                "message": email_body
             }, timeout=10)
-            logger.info(f"Web3Forms email sent for message from {message.name}")
+            logger.info(f"Web3Forms response: {resp.status_code} for message from {message.name}")
     except Exception as e:
         logger.warning(f"Web3Forms forwarding failed: {e}")
 
