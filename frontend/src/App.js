@@ -341,22 +341,18 @@ const ContactSection = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...formData, subject: formData.category || "Genel" })
       });
-      // 2. Send email via Web3Forms (client-side, fssakademi@gmail.com)
+      // 2. Send email via Web3Forms (client-side, simple request to avoid CORS preflight)
       try {
-        await fetch("https://api.web3forms.com/submit", {
-          method: "POST",
-          headers: { "Content-Type": "application/json", "Accept": "application/json" },
-          body: JSON.stringify({
-            access_key: "c872519d-1773-45ee-9b8a-e3fce5c1ffcf",
-            subject: `FSS Akademi - Yeni Mesaj: ${formData.name}`,
-            from_name: "FSS Akademi İletişim Formu",
-            replyto: formData.email,
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone || "Belirtilmedi",
-            message: formData.message
-          })
-        });
+        const web3Data = new URLSearchParams();
+        web3Data.append("access_key", "c872519d-1773-45ee-9b8a-e3fce5c1ffcf");
+        web3Data.append("subject", `FSS Akademi - Yeni Mesaj: ${formData.name}`);
+        web3Data.append("from_name", "FSS Akademi İletişim Formu");
+        web3Data.append("replyto", formData.email);
+        web3Data.append("name", formData.name);
+        web3Data.append("email", formData.email);
+        web3Data.append("phone", formData.phone || "Belirtilmedi");
+        web3Data.append("message", formData.message);
+        await fetch("https://api.web3forms.com/submit", { method: "POST", body: web3Data });
       } catch (emailErr) { console.warn("Web3Forms email failed:", emailErr); }
       if (res.ok) {
         setSubmitStatus("success");
