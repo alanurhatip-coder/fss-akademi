@@ -492,6 +492,10 @@ async def get_contents():
 async def get_active_contents():
     contents = await db.contents.find({"status": "active"}, {"_id": 0}).to_list(100)
     contents.sort(key=lambda x: x.get("createdAt", ""), reverse=True)
+    # Increment views for displayed contents
+    ids = [c["id"] for c in contents[:6]]
+    if ids:
+        await db.contents.update_many({"id": {"$in": ids}}, {"$inc": {"views": 1}})
     return contents
 
 @api_router.get("/contents/{content_id}")
