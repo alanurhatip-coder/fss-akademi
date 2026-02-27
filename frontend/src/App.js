@@ -839,11 +839,7 @@ const AdminTeachers = () => {
                 <input data-testid="teacher-title-input" type="text" value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} placeholder="Örn: Matematik Öğretmeni" className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:border-academic-gold focus:outline-none" />
               </div>
             </div>
-            <div>
-              <label className="text-slate-400 text-sm block mb-2">Fotoğraf URL</label>
-              <input data-testid="teacher-photo-input" type="url" value={formData.photoUrl} onChange={(e) => setFormData({...formData, photoUrl: e.target.value})} placeholder="https://..." className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:border-academic-gold focus:outline-none" />
-              {formData.photoUrl && <img src={formData.photoUrl} alt="Önizleme" className="mt-2 w-20 h-20 rounded-full object-cover border-2 border-academic-gold/30" />}
-            </div>
+            <ImageUploader value={formData.photoUrl} onChange={(url) => setFormData({...formData, photoUrl: url})} label="Fotoğraf" shape="circle" />
             <div>
               <label className="text-slate-400 text-sm block mb-2">Biyografi</label>
               <textarea data-testid="teacher-bio-input" value={formData.bio} onChange={(e) => setFormData({...formData, bio: e.target.value})} placeholder="Öğretmen hakkında kısa bilgi..." rows={3} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:border-academic-gold focus:outline-none resize-none" />
