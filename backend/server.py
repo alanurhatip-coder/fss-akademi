@@ -1,4 +1,25 @@
 from fastapi import FastAPI, APIRouter, HTTPException, UploadFile, File as FastAPIFile
+api_router = APIRouter()
+@api_router.post("/messages/reply")
+async def reply_message(reply_data: dict):
+    # Kullanıcıdan gelen email ve cevap metnini al
+    recipient_email = reply_data.get("email")
+    reply_body = reply_data.get("reply")
+    
+    msg = EmailMessage()
+    msg.set_content(reply_body)
+    msg['Subject'] = "FSS Akademi - Mesajınıza Yanıt"
+    msg['From'] = "FSS Akademi <info@fssakademi.com>"
+    msg['To'] = recipient_email
+
+    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
+        smtp.login(os.getenv("SMTP_EMAIL"), os.getenv("SMTP_PASSWORD"))
+        smtp.send_message(msg)
+    
+    return {"status": "success"}
+import smtplib
+from email.message import EmailMessage
+import os
 from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
@@ -16,9 +37,12 @@ import shutil
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-mongo_url = os.environ['MONGO_URL']
+import os
+
+mongo_url = os.getenv("MONGO_URI", "mongodb://localhost:27017")
 client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
+
+db = client[os.getenv("DB_NAME", "test_database")]
 
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
@@ -556,6 +580,16 @@ async def create_message(message: MessageCreate):
     message_dict["isRead"] = False
     message_dict["createdAt"] = datetime.now(timezone.utc).isoformat()
     await db.messages.insert_one(message_dict)
+    try:
+        if "email" in message_dict and message_dict["email"]:
+            send_confirmation_email(message_dict["email"])
+    except Exception as e:
+        print(f"E-posta gönderilemedi: {e}")
+    # ------------------------------------
+
+    created = await db.messages.find_one({"id": message_dict["id"]}, {"_id": 0})
+    return created
+    
 
     # Web3Forms is forwarded from frontend (server-side requires Pro plan)
 
@@ -699,3 +733,22 @@ async def startup_event():
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()
+def send_confirmation_email(user_email):
+    msg = EmailMessage()
+    msg.set_content(f"""
+Sayın İlgili,
+
+FSS Akademi'ye göstermiş olduğunuz ilgi için teşekkür ederiz. 
+İletişim formumuz aracılığıyla iletmiş olduğunuz mesajınız ekibimize ulaşmıştır. 
+İncelemelerimiz sonucunda size en kısa sürede dönüş sağlayacağız.
+
+İyi çalışmalar dileriz,
+FSS Akademi Ekibi
+    """) 
+    msg['Subject'] = "FSS Akademi - Mesajınız Alındı"
+    msg['From'] = "FSS Akademi <fssakademi@gmail.com>"
+    msg['To'] = user_email
+
+    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
+        smtp.login(os.getenv("SMTP_EMAIL"), os.getenv("SMTP_PASSWORD"))
+        smtp.send_message(msg)

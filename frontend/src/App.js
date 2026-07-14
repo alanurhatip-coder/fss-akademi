@@ -512,16 +512,10 @@ const AdminDashboard = ({ stats, recentMessages, recentContents, setActiveView }
           <h2 className="text-lg font-semibold text-white">Son Gelen Mesajlar</h2>
           <button onClick={() => setActiveView("inbox")} className="text-academic-gold text-sm hover:underline">Tümünü Gör</button>
         </div>
-        <div className="space-y-3">
-          {recentMessages.length === 0 ? <p className="text-slate-500 text-center py-4">Henüz mesaj yok</p> : recentMessages.map((msg) => (
-            <div key={msg.id} className={`p-4 rounded-xl ${msg.isRead ? 'bg-slate-700/50' : 'bg-slate-700 border-l-4 border-academic-gold'}`}>
-              <div className="flex items-start justify-between">
-                <div><p className="font-medium text-white">{msg.name}</p><p className="text-slate-400 text-sm">{msg.subject}</p></div>
-                {!msg.isRead && <span className="w-2 h-2 bg-academic-gold rounded-full" />}
-              </div>
+                       {!msg.isRead && <span className="w-2 h-2 bg-academic-gold rounded-full" />}
             </div>
-          ))}
-        </div>
+    	  ))
+  	)}
       </div>
       <div className="bg-slate-800 rounded-2xl p-6 border border-slate-700">
         <div className="flex items-center justify-between mb-4">
@@ -541,7 +535,6 @@ const AdminDashboard = ({ stats, recentMessages, recentContents, setActiveView }
           ))}
         </div>
       </div>
-    </div>
   </div>
 );
 
@@ -1185,6 +1178,23 @@ const HomePage = () => {
 // ==================== MAIN APP ====================
 
 function App() {
+  const [replyingTo, setReplyingTo] = useState(null);
+  const [replyText, setReplyText] = useState("");
+  const sendReply = async (msg) => {
+    try {
+      await fetch(`${API}/messages/reply`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+	body: JSON.stringify({ email: msg.email, reply: replyText })  
+      });
+      alert("Yanıt gönderildi!");
+      setReplyingTo(null);
+      setReplyText("");
+    } catch (err) {
+      alert("Hata oluştu!");
+    }
+  }; 
+  // -------------------
   return (
     <BrowserRouter>
       <Routes>
