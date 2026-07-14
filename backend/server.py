@@ -752,3 +752,7 @@ FSS Akademi Ekibi
     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
         smtp.login(os.getenv("SMTP_EMAIL"), os.getenv("SMTP_PASSWORD"))
         smtp.send_message(msg)
+
+@app.get("/")
+def home():
+    return {"mesaj": "Sistem basariyla calisiyor!"}
