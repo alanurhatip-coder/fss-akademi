@@ -756,3 +756,7 @@ FSS Akademi Ekibi
 @app.get("/")
 def home():
     return {"mesaj": "Sistem basariyla calisiyor!"}
+
+@app.get("/")
+async def health_check():
+    return {"status": "ok"}
