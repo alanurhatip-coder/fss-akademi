@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 aiohappyeyeballs==2.6.1
 aiohttp==3.13.3
 aiosignal==1.4.0
@@ -121,3 +122,21 @@ watchfiles==1.1.1
 websockets==15.0.1
 yarl==1.22.0
 zipp==3.23.0
+=======
+fastapi
+uvicorn[standard]
+pydantic
+email-validator
+python-dotenv
+passlib[bcrypt]
+python-jose[cryptography]
+python-multipart
+motor
+pymongo
+google-generativeai
+openai
+stripe
+boto3
+requests
+websockets
+>>>>>>> 2ba64143a36081f9b65c2760c400e97358e5f89f
