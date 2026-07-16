@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "@/App.css";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { GraduationCap, Building2, Users, BookOpen, Send, ArrowDown, Menu, X, Calendar, Lock, LogOut, Save, Eye, EyeOff, Plus, Trash2, Edit, FileText, Layers, Shield, Briefcase, Image, File, ExternalLink, Home, Mail, Settings, BarChart3, BookMarked, Inbox, ChevronRight, Bell, Search, MoreVertical, UserCheck, Upload, Loader2 } from "lucide-react";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
+const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 const WHATSAPP_URL = "https://api.whatsapp.com/send?phone=905309482654&text=Merhaba,%20FSS%20Akademi%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum.";
 const LOGO_URL = "https://customer-assets.emergentagent.com/job_akademi-premium-1/artifacts/gt05fxv8_Ekran%20g%C3%B6r%C3%BCnt%C3%BCs%C3%BC%202026-02-27%20014942.png";
@@ -254,7 +253,6 @@ const CustomSectionsDisplay = ({ sections }) => {
 
 const ContentsSection = ({ contents }) => {
   if (!contents?.length) return null;
-  const BACKEND_URL_BASE = process.env.REACT_APP_BACKEND_URL;
   const getCategoryLabel = (cat) => ({ education: "Eğitim", announcement: "Duyuru", blog: "Blog" }[cat] || cat);
   const formatDate = (d) => { try { return new Date(d).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" }); } catch { return ""; } };
   return (
@@ -375,7 +373,7 @@ const ContactSection = () => {
           <h2 className="font-playfair text-3xl md:text-4xl lg:text-5xl text-white mb-4">Bizimle <span className="text-gradient-gold italic">İletişime Geçin</span></h2>
         </div>
         <div className="glass-dark rounded-2xl p-8 md:p-12 glow-gold">
-          <form action="https://api.web3forms.com/submit" method="POST" onSubmit={handleSubmit} className="contact-form space-y-8">
+          <form action="https://formspree.io/f/xwvgvyel" method="POST" className="contact-form space-y-8">
             <input type="hidden" name="access_key" value="c872519d-1773-45ee-9b8a-e3fce5c1ffcf" />
             <input type="hidden" name="subject" value="FSS Akademi - Yeni İletişim Formu" />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -388,12 +386,10 @@ const ContactSection = () => {
             </div>
             <textarea name="message" value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} placeholder="Mesajınız" rows="4" required className="w-full resize-none" />
             <div className="flex flex-col items-center gap-4">
-              <button type="submit" disabled={isSubmitting} className="bg-academic-gold text-academic-navy rounded-full px-12 py-4 font-semibold text-lg flex items-center gap-3 disabled:opacity-50 hover:bg-academic-gold-dim">
-                {isSubmitting ? "Gönderiliyor..." : "Gönder"}<Send className="w-5 h-5" />
-              </button>
-              {submitStatus === "success" && <p className="text-green-400">Mesajınız başarıyla gönderildi.</p>}
-              {submitStatus === "error" && <p className="text-red-400">Bir hata oluştu.</p>}
-            </div>
+              <button type="submit" className="bg-academic-gold text-academic-navy rounded-full px-12 py-4 font-semibold text-lg flex items-center gap-3 hover:bg-academic-gold-dim">
+  Gönder <Send className="w-5 h-5" />
+</button>
+</div>
           </form>
         </div>
       </div>
@@ -512,11 +508,12 @@ const AdminDashboard = ({ stats, recentMessages, recentContents, setActiveView }
           <h2 className="text-lg font-semibold text-white">Son Gelen Mesajlar</h2>
           <button onClick={() => setActiveView("inbox")} className="text-academic-gold text-sm hover:underline">Tümünü Gör</button>
         </div>
-                       {!msg.isRead && <span className="w-2 h-2 bg-academic-gold rounded-full" />}
-            </div>
-    	  ))
-  	)}
-      </div>
+        <div className="p-4 mt-4 bg-gray-800 rounded-lg text-gray-300 text-sm border border-gray-700">
+          Siteden gelen iletişim mesajları altyapı üzerinden doğrudan kayıtlı e-posta adresinize iletilmektedir. Lütfen e-posta gelen kutunuzu kontrol ediniz.
+        </div>
+</div>
+  ))}
+</div>
       <div className="bg-slate-800 rounded-2xl p-6 border border-slate-700">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-white">Son Eklenen İçerikler</h2>
@@ -537,16 +534,7 @@ const AdminDashboard = ({ stats, recentMessages, recentContents, setActiveView }
       </div>
   </div>
 );
-
-const AdminContents = () => {
-  const [contents, setContents] = useState([]);
-  const [showForm, setShowForm] = useState(false);
-  const [editingContent, setEditingContent] = useState(null);
-  const [formData, setFormData] = useState({ title: "", coverImage: "", content: "", status: "draft", category: "education" });
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState({ type: "", text: "" });
-
-  useEffect(() => { fetchContents(); }, []);
+};
 
   const fetchContents = async () => {
     try { const res = await fetch(`${API}/contents`); setContents(await res.json()); } catch (err) { console.error(err); }
@@ -684,8 +672,8 @@ const AdminInbox = () => {
           <thead className="bg-slate-700/50"><tr><th className="text-left p-4 text-slate-300 font-medium">Gönderen</th><th className="text-left p-4 text-slate-300 font-medium hidden md:table-cell">E-posta</th><th className="text-left p-4 text-slate-300 font-medium hidden sm:table-cell">Konu</th><th className="text-left p-4 text-slate-300 font-medium hidden lg:table-cell">Tarih</th><th className="text-center p-4 text-slate-300 font-medium">Durum</th><th className="text-right p-4 text-slate-300 font-medium">İşlemler</th></tr></thead>
           <tbody>
             {messages.length === 0 ? <tr><td colSpan="6" className="text-center p-8 text-slate-500">Henüz mesaj yok</td></tr> : messages.map((msg) => (
-              <tr key={msg.id} className={`border-t border-slate-700 hover:bg-slate-700/30 cursor-pointer ${!msg.isRead ? 'bg-slate-700/20' : ''}`} onClick={() => openMessage(msg)}>
-                <td className="p-4"><span className={`font-medium ${!msg.isRead ? 'text-white' : 'text-slate-300'}`}>{msg.name}</span></td>
+              <tr key={msg.id} className={`border-t border-slate-700 hover:bg-slate-700/30 cursor-pointer ${!content.isRead ? 'bg-slate-700/20' : ''}`} onClick={() => openMessage(msg)}>
+                <td className="p-4"><span className={`font-medium ${!content.isRead ? 'text-white' : 'text-slate-300'}`}>{msg.name}</span></td>
                 <td className="p-4 text-slate-400 hidden md:table-cell">{msg.email}</td>
                 <td className="p-4 text-slate-400 hidden sm:table-cell">{msg.subject}</td>
                 <td className="p-4 text-slate-400 hidden lg:table-cell">{msg.createdAt ? new Date(msg.createdAt).toLocaleDateString('tr-TR') : '-'}</td>
@@ -1204,5 +1192,30 @@ function App() {
     </BrowserRouter>
   );
 }
+export const AdminContents = () => {
+  const [contents, setContents] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [editingContent, setEditingContent] = useState(null);
+  const [formData, setFormData] = useState({ title: "", coverImage: "", content: "", status: "draft", category: "education" });
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState({ type: "", text: "" });
 
+  useEffect(() => { fetchContents(); }, []);
+
+const fetchContents = async () => {
+    try { 
+      const res = await fetch(`${API}/contents`); 
+      const data = await res.json();
+      setContents(data); 
+    } catch (err) { 
+      console.error(err); 
+    }
+  };
+
+  return (
+    <div>
+      <h1>Admin Paneli</h1>
+    </div>
+  );
+};
 export default App;
