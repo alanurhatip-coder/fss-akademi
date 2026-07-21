@@ -47,6 +47,10 @@ code {
         --chart-4: 43 74% 66%;
         --chart-5: 27 87% 67%;
         --radius: 0.5rem;
+        --theme-bg: #0f172a;
+        --theme-bg-light: #1e293b;
+        --theme-accent: #d4af37;
+        --theme-accent-hover: #bfa030;
     }
     .dark {
         --background: 0 0% 3.9%;

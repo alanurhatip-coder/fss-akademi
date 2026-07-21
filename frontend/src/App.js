@@ -196,39 +196,26 @@ const HeroSection = ({ aboutContent, siteTexts = {}, siteSettings = {}, heroButt
 
 const FeaturesSection = ({ features = [] }) => {
   const displayFeatures = features && features.length > 0 ? features : [
-    { id: 1, title: "Uzman Eğitmenler", desc: "Alanında en iyi akademisyenler", icon: "BookOpen", colorTheme: "blue" },
-    { id: 2, title: "Birebir İlgi", desc: "Öğrenciye özel programlama", icon: "Users", colorTheme: "red" },
-    { id: 3, title: "Tam Uyumlu", desc: "Sınav müfredatıyla %100 uyum", icon: "CheckCircle", colorTheme: "emerald" }
+    { id: 1, title: "Uzman Eğitmenler", desc: "Alanında en iyi akademisyenler", icon: "BookOpen" },
+    { id: 2, title: "Birebir İlgi", desc: "Öğrenciye özel programlama", icon: "Users" },
+    { id: 3, title: "Tam Uyumlu", desc: "Sınav müfredatıyla %100 uyum", icon: "CheckCircle" }
   ];
-
-  const getColorClasses = (theme) => {
-    switch (theme) {
-      case 'red': return { bg: 'from-red-500 to-red-600', shadow: 'rgba(239,68,68,0.1)' };
-      case 'emerald': return { bg: 'from-emerald-500 to-emerald-600', shadow: 'rgba(16,185,129,0.1)' };
-      case 'orange': return { bg: 'from-orange-500 to-orange-600', shadow: 'rgba(249,115,22,0.1)' };
-      case 'purple': return { bg: 'from-purple-500 to-purple-600', shadow: 'rgba(168,85,247,0.1)' };
-      default: return { bg: 'from-blue-500 to-blue-600', shadow: 'rgba(59,130,246,0.1)' };
-    }
-  };
 
   return (
     <section className="py-12 px-6 md:px-12 bg-[var(--theme-bg)] relative z-20">
       <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
-        {displayFeatures.map(feat => {
-          const colors = getColorClasses(feat.colorTheme);
-          return (
-            <div key={feat.id} className="group relative bg-[var(--theme-bg-light)] rounded-3xl p-6 md:p-8 shadow-xl border border-[var(--theme-accent)]/10 text-center md:text-left cursor-default overflow-hidden hover:-translate-y-1 transition-transform">
-              <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: `linear-gradient(135deg, transparent 30%, ${colors.shadow} 50%, transparent 70%)`, backgroundSize: '200% 200%' }} />
-              <div className="relative z-10">
-                <div className={`w-14 h-14 md:w-16 md:h-16 bg-gradient-to-br ${colors.bg} rounded-2xl flex items-center justify-center mb-4 md:mb-6 shadow-lg mx-auto md:mx-0`}>
-                  <DynamicIcon name={feat.icon} className="w-7 h-7 md:w-8 md:h-8 text-white" />
-                </div>
-                <h3 className="text-lg md:text-2xl font-bold text-white mb-2">{feat.title}</h3>
-                <p className="text-sm md:text-base text-slate-400">{feat.desc}</p>
+        {displayFeatures.map(feat => (
+          <a key={feat.id} href="#services" className="block group relative bg-[var(--theme-bg-light)] rounded-3xl p-6 md:p-8 shadow-xl border border-[var(--theme-accent)]/10 text-center md:text-left overflow-hidden hover:-translate-y-1 transition-transform">
+            <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: `linear-gradient(135deg, transparent 30%, rgba(212,175,55,0.15) 50%, transparent 70%)`, backgroundSize: '200% 200%' }} />
+            <div className="relative z-10">
+              <div className="w-14 h-14 md:w-16 md:h-16 bg-gradient-to-br from-[var(--theme-accent)] to-[var(--theme-accent-hover)] rounded-2xl flex items-center justify-center mb-4 md:mb-6 shadow-lg mx-auto md:mx-0">
+                <DynamicIcon name={feat.icon} className="w-7 h-7 md:w-8 md:h-8 text-[var(--theme-bg)]" />
               </div>
+              <h3 className="text-lg md:text-2xl font-bold text-white mb-2 group-hover:text-[var(--theme-accent)] transition-colors">{feat.title}</h3>
+              <p className="text-sm md:text-base text-slate-400">{feat.desc}</p>
             </div>
-          );
-        })}
+          </a>
+        ))}
       </div>
     </section>
   );
