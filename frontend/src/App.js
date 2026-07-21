@@ -276,10 +276,10 @@ const FeaturesSection = ({ features = [] }) => {
 const DynamicServicesSection = ({ academicServices, studentServices, siteTexts = {} }) => (
   <section id="services" className="flex flex-col lg:flex-row min-h-screen relative z-10">
     <div className="lg:w-1/2 bg-[var(--theme-bg)] relative overflow-hidden py-16 md:py-24 px-6 md:px-12 lg:px-16 border-t border-[var(--theme-accent)]/10">
-      <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ background: 'radial-gradient(circle at 0% 0%, var(--theme-accent) 0%, transparent 60%)' }} />
+      <div className="absolute inset-0 opacity-50 pointer-events-none" style={{ background: 'radial-gradient(circle at 0% 0%, var(--theme-accent) 0%, transparent 75%)' }} />
       <div className="relative z-10 max-w-xl mx-auto lg:mx-0">
         <span className="font-space text-xs tracking-[0.3em] text-[var(--theme-accent)] uppercase mb-4 block">{siteTexts.academicLabel || "Profesyonel Eğitim"}</span>
-        <h2 className="font-playfair text-3xl md:text-4xl lg:text-5xl text-white mb-4">{(siteTexts.academicTitle || "Akademik & Kurumsal").split("&").length > 1 ? <>{(siteTexts.academicTitle || "Akademik & Kurumsal").split("&")[0]}& <span className="text-[var(--theme-accent)] italic">{(siteTexts.academicTitle || "Akademik & Kurumsal").split("&")[1]}</span></> : <span className="text-[var(--theme-accent)] italic">{siteTexts.academicTitle || "Akademik & Kurumsal"}</span>}</h2>
+        <h2 className="font-playfair text-3xl md:text-4xl lg:text-5xl mb-4" style={{ color: siteTexts.academicTitleColor || 'white' }}>{(siteTexts.academicTitle || "Akademik & Kurumsal").split("&").length > 1 ? <>{(siteTexts.academicTitle || "Akademik & Kurumsal").split("&")[0]}& <span className="italic" style={{ color: siteTexts.academicTitleColor || 'var(--theme-accent)' }}>{(siteTexts.academicTitle || "Akademik & Kurumsal").split("&")[1]}</span></> : <span style={{ color: siteTexts.academicTitleColor || 'var(--theme-accent)' }} className="italic">{siteTexts.academicTitle || "Akademik & Kurumsal"}</span>}</h2>
         <p className="font-manrope text-slate-400 mb-10">{siteTexts.academicDesc || "Araştırmacılar, akademisyenler ve kurumlar için profesyonel eğitim programları."}</p>
         <Accordion type="single" collapsible className="space-y-6">
           {academicServices.map((service) => (
@@ -308,10 +308,10 @@ const DynamicServicesSection = ({ academicServices, studentServices, siteTexts =
       </div>
     </div>
     <div className="lg:w-1/2 bg-[var(--theme-bg-light)] relative overflow-hidden py-16 md:py-24 px-6 md:px-12 lg:px-16 border-t border-[var(--theme-accent)]/10">
-      <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ background: 'radial-gradient(circle at 100% 100%, var(--theme-accent) 0%, transparent 60%)' }} />
+      <div className="absolute inset-0 opacity-50 pointer-events-none" style={{ background: 'radial-gradient(circle at 100% 100%, var(--theme-accent) 0%, transparent 75%)' }} />
       <div className="relative z-10 max-w-xl mx-auto lg:mx-0 lg:ml-auto">
         <span className="font-space text-xs tracking-[0.3em] text-[var(--theme-accent)] uppercase mb-4 block">{siteTexts.studentLabel || "Bireysel Gelişim"}</span>
-        <h2 className="font-playfair text-3xl md:text-4xl lg:text-5xl text-white mb-4">{(siteTexts.studentTitle || "Veliler & Öğrenciler").split("&").length > 1 ? <>{(siteTexts.studentTitle || "Veliler & Öğrenciler").split("&")[0]}& <span className="text-[var(--theme-accent)] italic">{(siteTexts.studentTitle || "Veliler & Öğrenciler").split("&")[1]}</span></> : <span className="text-[var(--theme-accent)] italic">{siteTexts.studentTitle || "Veliler & Öğrenciler"}</span>}</h2>
+        <h2 className="font-playfair text-3xl md:text-4xl lg:text-5xl mb-4" style={{ color: siteTexts.studentTitleColor || 'white' }}>{(siteTexts.studentTitle || "Veliler & Öğrenciler").split("&").length > 1 ? <>{(siteTexts.studentTitle || "Veliler & Öğrenciler").split("&")[0]}& <span className="italic" style={{ color: siteTexts.studentTitleColor || 'var(--theme-accent)' }}>{(siteTexts.studentTitle || "Veliler & Öğrenciler").split("&")[1]}</span></> : <span style={{ color: siteTexts.studentTitleColor || 'var(--theme-accent)' }} className="italic">{siteTexts.studentTitle || "Veliler & Öğrenciler"}</span>}</h2>
         <p className="font-manrope text-slate-400 mb-10">{siteTexts.studentDesc || "Çocuklarınızın matematik becerilerini geliştirmek için kapsamlı programlar."}</p>
         <Accordion type="single" collapsible className="space-y-6">
           {studentServices.map((service) => (
