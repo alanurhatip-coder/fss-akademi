@@ -179,9 +179,11 @@ class SiteTextsUpdate(BaseModel):
     heroSubtitle: Optional[str] = None
     academicLabel: Optional[str] = None
     academicTitle: Optional[str] = None
+    academicTitleColor: Optional[str] = None
     academicDesc: Optional[str] = None
     studentLabel: Optional[str] = None
     studentTitle: Optional[str] = None
+    studentTitleColor: Optional[str] = None
     studentDesc: Optional[str] = None
     teachersLabel: Optional[str] = None
     teachersTitle: Optional[str] = None
