@@ -220,6 +220,16 @@ class FeatureCardUpdate(BaseModel):
     colorTheme: Optional[str] = None
     order: Optional[int] = None
 
+class FAQCreate(BaseModel):
+    question: str
+    answer: str
+    order: int = 0
+
+class FAQUpdate(BaseModel):
+    question: Optional[str] = None
+    answer: Optional[str] = None
+    order: Optional[int] = None
+
 # ==================== DEFAULT DATA ====================
 
 DEFAULT_ACADEMIC_SERVICES = [
@@ -375,6 +385,21 @@ async def init_default_data():
         }
         await db.site_texts.insert_one(default_texts)
         logger.info("Default site texts created")
+
+    # Default FAQs
+    faqs_count = await db.faqs.count_documents({})
+    if faqs_count == 0:
+        default_faqs = [
+            {"id": str(uuid.uuid4()), "question": "Derslere başlamak için ne yapmalıyım?", "answer": "Sitemizden \"Öğretmenlerimiz\" bölümüne girerek size en uygun uzman eğitmeni seçebilirsiniz. Ardından profilin altındaki \"Ders Talep Et\" butonuna tıklayarak doğrudan WhatsApp hattımıza bağlanabilir ve ders planlamanızı dakikalar içinde yapabilirsiniz.", "order": 0},
+            {"id": str(uuid.uuid4()), "question": "Eğitimler online mı yoksa yüz yüze mi gerçekleşiyor?", "answer": "FSS Akademi olarak öğrencinin ve velinin tercihine göre esnek bir model sunuyoruz. Eğitmenlerimizin uygunluğuna göre derslerimizi hem interaktif online platformlarda hem de yüz yüze gerçekleştirebiliyoruz. İhtiyacınızı WhatsApp üzerinden bize iletmeniz yeterlidir.", "order": 1},
+            {"id": str(uuid.uuid4()), "question": "Ders ücretleri ne kadar ve ödemeyi nasıl yapıyoruz?", "answer": "Ders ücretlerimiz, alınan hizmetin türüne (ilkokul/ortaokul destek, problem çözme kampı veya akademik danışmanlık) göre belirlenmektedir. Fiyatlandırma ve havale/EFT ile ödeme adımları hakkında detaylı bilgiyi WhatsApp kayıt sürecimizde şeffaf bir şekilde paylaşıyoruz.", "order": 2},
+            {"id": str(uuid.uuid4()), "question": "Çocuğum öğretmenle uyum sağlayamazsa eğitmen değişikliği yapabiliyor muyuz?", "answer": "Kesinlikle. FSS Akademi'de temel önceliğimiz öğrencinin akademik başarısı ve dersten aldığı verimdir. Herhangi bir uyum sorunu yaşanması durumunda, WhatsApp hattımız üzerinden bize bilgi vermeniz halinde süreci anında farklı bir uzman eğitmenimizle yeniden planlıyoruz.", "order": 3},
+            {"id": str(uuid.uuid4()), "question": "Bir özel ders ne kadar sürüyor?", "answer": "Standart bir ders periyodumuz ortalama 60 dakika olarak planlanmaktadır (40-45 dakika aktif ders + dinlenme süresi). Ancak özellikle ilkokul kademesinde, öğrencimizin yaş grubuna ve dikkat süresine göre pedagojik standartlara uygun esneklikler sağlanabilmektedir.", "order": 4},
+            {"id": str(uuid.uuid4()), "question": "Sistemdeki öğretmenlerinizi nasıl seçiyorsunuz?", "answer": "Kadromuzdaki tüm eğitmenler; kendi branşında (Sınıf Öğretmenliği, Matematik vb.) uzman, pedagojik formasyona sahip ve akademik geçmişi güçlü profesyonellerden oluşmaktadır. Amacımız ezberden uzak, tamamen öğrenciye özel ve destekleyici bir eğitim sunmaktır.", "order": 5}
+        ]
+        for faq in default_faqs:
+            await db.faqs.insert_one(faq)
+        logger.info("Default FAQs created")
 
 # ==================== BASIC ROUTES ====================
 
@@ -830,6 +855,45 @@ async def startup_event():
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()
+
+# ==================== FAQS ====================
+@api_router.get("/faqs")
+async def get_faqs():
+    faqs = await db.faqs.find().sort("order", 1).to_list(100)
+    for f in faqs: 
+        if "_id" in f:
+            f["id"] = str(f.pop("_id"))
+    return faqs
+
+@api_router.post("/faqs")
+async def create_faq(faq: FAQCreate):
+    new_faq = faq.model_dump()
+    result = await db.faqs.insert_one(new_faq)
+    new_faq["id"] = str(result.inserted_id)
+    new_faq.pop("_id", None)
+    return new_faq
+
+@api_router.put("/faqs/{faq_id}")
+async def update_faq(faq_id: str, faq: FAQUpdate):
+    from bson import ObjectId
+    update_data = {k: v for k, v in faq.model_dump().items() if v is not None}
+    if update_data:
+        try:
+            await db.faqs.update_one({"_id": ObjectId(faq_id)}, {"$set": update_data})
+        except:
+            await db.faqs.update_one({"id": faq_id}, {"$set": update_data})
+    return {"status": "success"}
+
+@api_router.delete("/faqs/{faq_id}")
+async def delete_faq(faq_id: str):
+    from bson import ObjectId
+    try:
+        await db.faqs.delete_one({"_id": ObjectId(faq_id)})
+    except:
+        await db.faqs.delete_one({"id": faq_id})
+    return {"status": "success"}
+
+
 def send_confirmation_email(user_email):
     msg = EmailMessage()
     msg.set_content(f"""
