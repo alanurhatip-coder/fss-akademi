@@ -1817,6 +1817,7 @@ const HomePage =  () => {
   const [siteSettings, setSiteSettings] = useState({});
   const [heroButtons, setHeroButtons] = useState([]);
   const [features, setFeatures] = useState([]);
+  const [faqs, setFaqs] = useState([]);
 
   useEffect(() => {
     fetchAbout();
@@ -1828,6 +1829,7 @@ const HomePage =  () => {
     fetchSiteSettings();
     fetchHeroButtons();
     fetchFeaturesData();
+    fetchFaqs();
   }, []);
 
   const fetchHeroButtons = async () => {
@@ -1836,6 +1838,14 @@ const HomePage =  () => {
 
   const fetchFeaturesData = async () => {
     try { const res = await fetch(`${API}/features`); setFeatures(await res.json()); } catch (err) {}
+  };
+
+  const fetchFaqs = async () => {
+    try {
+      const res = await fetch(`${API}/faqs`);
+      const data = await res.json();
+      setFaqs(Array.isArray(data) ? data : []);
+    } catch (err) { setFaqs([]); }
   };
 
   const fetchAbout = async () => {
@@ -1898,11 +1908,13 @@ const HomePage =  () => {
               <HeroSection aboutContent={aboutContent} siteTexts={siteTexts} siteSettings={siteSettings} heroButtons={heroButtons} />
               <FeaturesSection features={features} />
               <CustomSectionsDisplay sections={customSections} />
+              <FAQSection faqs={faqs} />
             </>
           } />
           <Route path="/hizmetler" element={
             <>
                     <DynamicServicesSection academicServices={academicServices} studentServices={studentServices} siteTexts={siteTexts} />
+        <FAQSection faqs={faqs} />
       <FAQSection faqs={faqs} />
               <ContentsSection contents={contents} />
             </>
