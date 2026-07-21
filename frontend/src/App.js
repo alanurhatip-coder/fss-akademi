@@ -229,6 +229,16 @@ const FeaturesSection = ({ features = [] }) => {
   ];
 
   const getColorClasses = (theme) => {
+    if (theme && theme.startsWith('#')) {
+      return {
+        isCustom: true,
+        bg: '',
+        styleBg: { backgroundImage: `linear-gradient(to bottom right, ${theme}, ${theme}cc)` },
+        shadow: `${theme}26`, 
+        textHover: '',
+        iconColor: 'text-white'
+      };
+    }
     switch (theme) {
       case 'red': return { bg: 'from-red-500 to-red-600', shadow: 'rgba(239,68,68,0.15)', textHover: 'group-hover:text-red-500', iconColor: 'text-white' };
       case 'emerald': return { bg: 'from-emerald-500 to-emerald-600', shadow: 'rgba(16,185,129,0.15)', textHover: 'group-hover:text-emerald-500', iconColor: 'text-white' };
@@ -245,13 +255,14 @@ const FeaturesSection = ({ features = [] }) => {
         {displayFeatures.map(feat => {
           const colors = getColorClasses(feat.colorTheme);
           return (
-            <Link key={feat.id} to="/hizmetler" className="block group relative bg-[var(--theme-bg-light)] rounded-3xl p-6 md:p-8 shadow-xl border border-[var(--theme-accent)]/10 text-center md:text-left overflow-hidden hover:-translate-y-1 transition-transform">
+            <Link key={feat.id} id={`feat-${feat.id}`} to="/hizmetler" className="block group relative bg-[var(--theme-bg-light)] rounded-3xl p-6 md:p-8 shadow-xl border border-[var(--theme-accent)]/10 text-center md:text-left overflow-hidden hover:-translate-y-1 transition-transform">
+              {colors.isCustom && <style>{`#feat-${feat.id}:hover h3 { color: ${feat.colorTheme} !important; }`}</style>}
               <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: `linear-gradient(135deg, transparent 30%, ${colors.shadow} 50%, transparent 70%)`, backgroundSize: '200% 200%' }} />
               <div className="relative z-10">
-                <div className={`w-14 h-14 md:w-16 md:h-16 bg-gradient-to-br ${colors.bg} rounded-2xl flex items-center justify-center mb-4 md:mb-6 shadow-lg mx-auto md:mx-0`}>
+                <div className={`w-14 h-14 md:w-16 md:h-16 rounded-2xl flex items-center justify-center mb-4 md:mb-6 shadow-lg mx-auto md:mx-0 ${colors.isCustom ? '' : 'bg-gradient-to-br ' + colors.bg}`} style={colors.isCustom ? colors.styleBg : {}}>
                   <DynamicIcon name={feat.icon} className={`w-7 h-7 md:w-8 md:h-8 ${colors.iconColor}`} />
                 </div>
-                <h3 className={`text-lg md:text-2xl font-bold text-white mb-2 ${colors.textHover} transition-colors`}>{feat.title}</h3>
+                <h3 className={`text-lg md:text-2xl font-bold text-white mb-2 transition-colors ${colors.isCustom ? '' : colors.textHover}`}>{feat.title}</h3>
                 <p className="text-sm md:text-base text-slate-400">{feat.desc}</p>
               </div>
             </Link>
@@ -1507,9 +1518,23 @@ export const AdminFeatures = () => {
               </select>
             </div>
             <div><label className="text-slate-400 text-sm block mb-2">Tema Rengi</label>
-              <select value={formData.colorTheme} onChange={e => setFormData({...formData, colorTheme: e.target.value})} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 text-white focus:border-[var(--theme-accent)] focus:outline-none">
-                <option value="blue">Mavi</option><option value="red">Kırmızı</option><option value="emerald">Yeşil</option><option value="orange">Turuncu</option><option value="purple">Mor</option>
-              </select>
+              <div className="flex gap-2">
+                <select value={formData.colorTheme?.startsWith('#') ? 'custom' : (formData.colorTheme || 'gold')} onChange={e => {
+                  if (e.target.value === 'custom') setFormData({...formData, colorTheme: '#d4af37'});
+                  else setFormData({...formData, colorTheme: e.target.value});
+                }} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 text-white focus:border-[var(--theme-accent)] focus:outline-none">
+                  <option value="gold">Site Vurgu Rengi (Altın Sarısı vb.)</option>
+                  <option value="blue">Mavi</option>
+                  <option value="red">Kırmızı</option>
+                  <option value="emerald">Yeşil</option>
+                  <option value="orange">Turuncu</option>
+                  <option value="purple">Mor</option>
+                  <option value="custom">Özel Renk Seç (Renk Paleti)</option>
+                </select>
+                {formData.colorTheme?.startsWith('#') && (
+                  <input type="color" value={formData.colorTheme} onChange={e => setFormData({...formData, colorTheme: e.target.value})} className="h-[42px] w-[42px] shrink-0 rounded cursor-pointer border border-slate-600 bg-slate-700" title="Renk Paleti" />
+                )}
+              </div>
             </div>
             <div><label className="text-slate-400 text-sm block mb-2">Sıra No</label><input type="number" value={formData.order} onChange={e => setFormData({...formData, order: parseInt(e.target.value) || 0})} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 text-white focus:border-[var(--theme-accent)] focus:outline-none" /></div>
           </div>
