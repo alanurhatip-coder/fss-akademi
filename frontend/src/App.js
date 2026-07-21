@@ -839,7 +839,13 @@ const AdminSiteSettings = () => {
   useEffect(() => { fetchSettings(); }, []);
 
   const fetchSettings = async () => {
-    try { const res = await fetch(`${API}/site-settings`); const data = await res.json(); setSettings(data); } catch (err) { console.error(err); }
+    try { 
+      const res = await fetch(`${API}/site-settings`); 
+      const data = await res.json(); 
+      if (data.fontFamily && !data.headingFontFamily) data.headingFontFamily = "'Playfair Display', serif";
+      if (data.fontFamily && !data.bodyFontFamily) data.bodyFontFamily = data.fontFamily;
+      setSettings(data); 
+    } catch (err) { console.error(err); }
   };
 
   const showMsg = (type, text) => { setMessage({ type, text }); setTimeout(() => setMessage({ type: "", text: "" }), 3000); };
@@ -1725,14 +1731,14 @@ const HomePage = () => {
           ${siteSettings.themeAccent ? `--theme-accent: ${siteSettings.themeAccent};` : ''}
           ${siteSettings.themeAccentHover ? `--theme-accent-hover: ${siteSettings.themeAccentHover};` : ''}
           ${siteSettings.fontFamily ? `--theme-font-body: ${siteSettings.fontFamily}; --theme-font-heading: ${siteSettings.fontFamily};` : ''}
-          ${siteSettings.headingFontFamily ? `--theme-font-heading: ${siteSettings.headingFontFamily};` : ''}
-          ${siteSettings.bodyFontFamily ? `--theme-font-body: ${siteSettings.bodyFontFamily};` : ''}
+          ${siteSettings.headingFontFamily ? `--theme-font-heading: ${siteSettings.headingFontFamily};` : `--theme-font-heading: 'Playfair Display', serif;`}
+          ${siteSettings.bodyFontFamily ? `--theme-font-body: ${siteSettings.bodyFontFamily};` : `--theme-font-body: 'Manrope', sans-serif;`}
         }
-        body, p, span, a, .font-manrope, .font-space {
-          font-family: var(--theme-font-body, 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif) !important;
+        body, p, span, a, div, li, ul, button, input, textarea, .font-manrope, .font-space {
+          font-family: var(--theme-font-body) !important;
         }
         h1, h2, h3, h4, h5, h6, .font-playfair {
-          font-family: var(--theme-font-heading, 'Playfair Display', serif) !important;
+          font-family: var(--theme-font-heading) !important;
         }
       `}</style>
       <StickyHeader siteTexts={siteTexts} siteSettings={siteSettings} />
