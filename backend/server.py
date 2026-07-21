@@ -152,6 +152,7 @@ class SiteSettingsUpdate(BaseModel):
     themeBgLight: Optional[str] = None
     themeAccent: Optional[str] = None
     themeAccentHover: Optional[str] = None
+    fontFamily: Optional[str] = None
 
 # Teachers
 class TeacherCreate(BaseModel):

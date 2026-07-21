@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-dom";
 import "@/App.css";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { GraduationCap, Building2, Users, BookOpen, Send, ArrowDown, Menu, X, Calendar, Lock, LogOut, Save, Eye, EyeOff, Plus, Trash2, Edit, FileText, Layers, Shield, Briefcase, Image, File, ExternalLink, Home, Mail, Settings, BarChart3, BookMarked, Inbox, ChevronRight, Bell, Search, MoreVertical, UserCheck, Upload, Loader2, Palette, Phone, MessageCircle, CheckCircle, Star, MousePointerClick, LayoutGrid, Award } from "lucide-react";
@@ -84,7 +84,15 @@ const DynamicIcon = ({ name, className }) => {
     case "MessageCircle": return <MessageCircle className={className} />;
     case "CheckCircle": return <CheckCircle className={className} />;
     case "Star": return <Star className={className} />;
-    case "Calendar":
+    case "BookOpen": return <BookOpen className={className} />;
+    case "Users": return <Users className={className} />;
+    case "MousePointerClick": return <MousePointerClick className={className} />;
+    case "LayoutGrid": return <LayoutGrid className={className} />;
+    case "GraduationCap": return <GraduationCap className={className} />;
+    case "Building2": return <Building2 className={className} />;
+    case "Award": return <Award className={className} />;
+    case "Briefcase": return <Briefcase className={className} />;
+    case "Calendar": return <Calendar className={className} />;
     default: return <Calendar className={className} />;
   }
 };
@@ -100,20 +108,21 @@ const StickyHeader = ({ siteTexts = {}, siteSettings = {} }) => {
   }, []);
 
   const navLinks = [
-    { href: "#hero", label: "Ana Sayfa" },
-    { href: "#services", label: "Hizmetler" },
-    { href: "#contact", label: "İletişim" }
+    { href: "/", label: "Ana Sayfa" },
+    { href: "/hizmetler", label: "Hizmetler" },
+    { href: "/ogretmenler", label: "Öğretmenler" },
+    { href: "/iletisim", label: "İletişim" }
   ];
 
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled ? "bg-[var(--theme-bg)]/90 backdrop-blur-xl border-b border-[var(--theme-accent)]/10 shadow-lg py-3" : "bg-transparent py-5"}`}>
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
-        <a href="#hero" className="flex items-center gap-3 group">
+        <a href="/" className="flex items-center gap-3 group">
           <img src={LOGO_URL} alt="FSS Akademi" className="w-10 h-10 rounded-full object-cover border-2 border-[var(--theme-accent)]/30 group-hover:scale-105 transition-transform" />
           <span className="font-playfair text-xl text-white group-hover:text-[var(--theme-accent)] transition-colors">FSS Akademi</span>
         </a>
         <nav className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (<a key={link.href} href={link.href} className="font-manrope text-sm font-medium text-slate-300 hover:text-[var(--theme-accent)] transition-colors">{link.label}</a>))}
+          {navLinks.map((link) => (<Link key={link.href} to={link.href} className="font-manrope text-sm font-medium text-slate-300 hover:text-[var(--theme-accent)] transition-colors">{link.label}</Link>))}
           <a href={`https://wa.me/${siteSettings.whatsappNumber || "905436619340"}`} target="_blank" rel="noopener noreferrer" className="hidden md:flex items-center gap-2 bg-gradient-to-r from-[var(--theme-accent)] to-[var(--theme-accent-hover)] text-[var(--theme-bg)] px-6 py-2.5 rounded-full font-bold hover:scale-105 transition-transform shadow-lg text-sm">
             <DynamicIcon name={siteTexts.appointmentBtnIcon} className="w-4 h-4" />{siteTexts.appointmentBtnText || "Ücretsiz Randevu"}
           </a>
@@ -123,8 +132,8 @@ const StickyHeader = ({ siteTexts = {}, siteSettings = {} }) => {
         </button>
       </div>
       {isMobileMenuOpen && (
-        <nav className="md:hidden bg-academic-navy/98 backdrop-blur-lg border-t border-academic-gold/10 p-6 flex flex-col gap-4">
-          {navLinks.map((link) => (<a key={link.href} href={link.href} onClick={() => setIsMobileMenuOpen(false)} className="text-slate-300 hover:text-academic-gold py-2">{link.label}</a>))}
+        <nav className="md:hidden bg-academic-navy/98 backdrop-blur-lg border-t border-[var(--theme-accent)]/10 p-6 flex flex-col gap-4">
+          {navLinks.map((link) => (<Link key={link.href} to={link.href} onClick={() => setIsMobileMenuOpen(false)} className="text-slate-300 hover:text-[var(--theme-accent)] py-2">{link.label}</Link>))}
           <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 bg-academic-gold text-academic-navy rounded-full px-5 py-3 font-semibold text-sm mt-2">
             <Calendar className="w-4 h-4" />Ücretsiz Randevu
           </a>
@@ -177,11 +186,22 @@ const HeroSection = ({ aboutContent, siteTexts = {}, siteSettings = {}, heroButt
       
       {heroButtons && heroButtons.length > 0 ? (
         <div className="mt-10 flex flex-wrap justify-center gap-4 opacity-0 animate-fade-in-up" style={{ animationDelay: "0.8s", animationFillMode: "forwards" }}>
-          {heroButtons.map(btn => (
-            <a key={btn.id} href={btn.url.startsWith('http') ? btn.url : (btn.url === '#services' ? '#services' : `https://wa.me/${siteSettings.whatsappNumber || "905436619340"}`)} target={btn.url.startsWith('http') ? '_blank' : '_self'} rel="noopener noreferrer" className={`flex items-center gap-3 ${btn.styleType === 'outline' ? 'border-2 border-[var(--theme-accent)] text-[var(--theme-accent)]' : 'bg-gradient-to-r from-[var(--theme-accent)] to-[var(--theme-accent-hover)] text-[var(--theme-bg)]'} rounded-full px-8 py-4 font-bold text-lg hover:scale-105 transition-transform shadow-[0_10px_30px_rgba(212,175,55,0.3)]`}>
-              <DynamicIcon name={btn.icon || "MousePointerClick"} className="w-6 h-6" />{btn.text}
-            </a>
-          ))}
+          {heroButtons.map(btn => {
+            const isInternal = btn.url === '#services' || btn.url === '/hizmetler';
+            const btnClass = `flex items-center gap-3 ${btn.styleType === 'outline' ? 'border-2 border-[var(--theme-accent)] text-[var(--theme-accent)]' : 'bg-gradient-to-r from-[var(--theme-accent)] to-[var(--theme-accent-hover)] text-[var(--theme-bg)]'} rounded-full px-8 py-4 font-bold text-lg hover:scale-105 transition-transform shadow-[0_10px_30px_rgba(212,175,55,0.3)]`;
+            if (isInternal) {
+              return (
+                <Link key={btn.id} to="/hizmetler" className={btnClass}>
+                  <DynamicIcon name={btn.icon || "MousePointerClick"} className="w-6 h-6" />{btn.text}
+                </Link>
+              );
+            }
+            return (
+              <a key={btn.id} href={btn.url.startsWith('http') ? btn.url : `https://wa.me/${siteSettings.whatsappNumber || "905436619340"}`} target={btn.url.startsWith('http') ? '_blank' : '_self'} rel="noopener noreferrer" className={btnClass}>
+                <DynamicIcon name={btn.icon || "MousePointerClick"} className="w-6 h-6" />{btn.text}
+              </a>
+            );
+          })}
         </div>
       ) : (
         <a href={`https://wa.me/${siteSettings.whatsappNumber || "905436619340"}`} target="_blank" rel="noopener noreferrer" className="mt-10 flex items-center gap-3 bg-gradient-to-r from-[var(--theme-accent)] to-[var(--theme-accent-hover)] text-[var(--theme-bg)] rounded-full px-10 py-5 font-bold text-lg opacity-0 animate-fade-in-up hover:scale-105 transition-transform shadow-[0_10px_30px_rgba(212,175,55,0.3)]" style={{ animationDelay: "0.8s", animationFillMode: "forwards" }}>
@@ -189,7 +209,7 @@ const HeroSection = ({ aboutContent, siteTexts = {}, siteSettings = {}, heroButt
         </a>
       )}
 
-      <a href="#services" className="absolute bottom-4 left-1/2 -translate-x-1/2 text-[var(--theme-accent)] opacity-60 hover:opacity-100 hover:translate-y-2 transition-all"><ArrowDown className="w-8 h-8" /></a>
+      <Link to="/hizmetler" className="absolute bottom-4 left-1/2 -translate-x-1/2 text-[var(--theme-accent)] opacity-60 hover:opacity-100 hover:translate-y-2 transition-all"><ArrowDown className="w-8 h-8" /></Link>
     </section>
   );
 };
@@ -205,7 +225,7 @@ const FeaturesSection = ({ features = [] }) => {
     <section className="py-12 px-6 md:px-12 bg-[var(--theme-bg)] relative z-20">
       <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
         {displayFeatures.map(feat => (
-          <a key={feat.id} href="#services" className="block group relative bg-[var(--theme-bg-light)] rounded-3xl p-6 md:p-8 shadow-xl border border-[var(--theme-accent)]/10 text-center md:text-left overflow-hidden hover:-translate-y-1 transition-transform">
+          <Link key={feat.id} to="/hizmetler" className="block group relative bg-[var(--theme-bg-light)] rounded-3xl p-6 md:p-8 shadow-xl border border-[var(--theme-accent)]/10 text-center md:text-left overflow-hidden hover:-translate-y-1 transition-transform">
             <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: `linear-gradient(135deg, transparent 30%, rgba(212,175,55,0.15) 50%, transparent 70%)`, backgroundSize: '200% 200%' }} />
             <div className="relative z-10">
               <div className="w-14 h-14 md:w-16 md:h-16 bg-gradient-to-br from-[var(--theme-accent)] to-[var(--theme-accent-hover)] rounded-2xl flex items-center justify-center mb-4 md:mb-6 shadow-lg mx-auto md:mx-0">
@@ -214,7 +234,7 @@ const FeaturesSection = ({ features = [] }) => {
               <h3 className="text-lg md:text-2xl font-bold text-white mb-2 group-hover:text-[var(--theme-accent)] transition-colors">{feat.title}</h3>
               <p className="text-sm md:text-base text-slate-400">{feat.desc}</p>
             </div>
-          </a>
+          </Link>
         ))}
       </div>
     </section>
@@ -224,7 +244,7 @@ const FeaturesSection = ({ features = [] }) => {
 const DynamicServicesSection = ({ academicServices, studentServices, siteTexts = {} }) => (
   <section id="services" className="flex flex-col lg:flex-row min-h-screen relative z-10">
     <div className="lg:w-1/2 bg-[var(--theme-bg)] relative overflow-hidden py-16 md:py-24 px-6 md:px-12 lg:px-16 border-t border-[var(--theme-accent)]/10">
-      <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "url('https://images.pexels.com/photos/256477/pexels-photo-256477.jpeg')", backgroundSize: "cover" }} />
+      <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ background: 'radial-gradient(circle at 0% 0%, var(--theme-accent) 0%, transparent 60%)' }} />
       <div className="relative z-10 max-w-xl mx-auto lg:mx-0">
         <span className="font-space text-xs tracking-[0.3em] text-[var(--theme-accent)] uppercase mb-4 block">{siteTexts.academicLabel || "Profesyonel Eğitim"}</span>
         <h2 className="font-playfair text-3xl md:text-4xl lg:text-5xl text-white mb-4">{(siteTexts.academicTitle || "Akademik & Kurumsal").split("&").length > 1 ? <>{(siteTexts.academicTitle || "Akademik & Kurumsal").split("&")[0]}& <span className="text-[var(--theme-accent)] italic">{(siteTexts.academicTitle || "Akademik & Kurumsal").split("&")[1]}</span></> : <span className="text-[var(--theme-accent)] italic">{siteTexts.academicTitle || "Akademik & Kurumsal"}</span>}</h2>
@@ -256,7 +276,7 @@ const DynamicServicesSection = ({ academicServices, studentServices, siteTexts =
       </div>
     </div>
     <div className="lg:w-1/2 bg-[var(--theme-bg-light)] relative overflow-hidden py-16 md:py-24 px-6 md:px-12 lg:px-16 border-t border-[var(--theme-accent)]/10">
-      <div className="absolute top-10 right-10 w-64 h-64 bg-[var(--theme-accent)]/10 rounded-full blur-[100px]" />
+      <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ background: 'radial-gradient(circle at 100% 100%, var(--theme-accent) 0%, transparent 60%)' }} />
       <div className="relative z-10 max-w-xl mx-auto lg:mx-0 lg:ml-auto">
         <span className="font-space text-xs tracking-[0.3em] text-[var(--theme-accent)] uppercase mb-4 block">{siteTexts.studentLabel || "Bireysel Gelişim"}</span>
         <h2 className="font-playfair text-3xl md:text-4xl lg:text-5xl text-white mb-4">{(siteTexts.studentTitle || "Veliler & Öğrenciler").split("&").length > 1 ? <>{(siteTexts.studentTitle || "Veliler & Öğrenciler").split("&")[0]}& <span className="text-[var(--theme-accent)] italic">{(siteTexts.studentTitle || "Veliler & Öğrenciler").split("&")[1]}</span></> : <span className="text-[var(--theme-accent)] italic">{siteTexts.studentTitle || "Veliler & Öğrenciler"}</span>}</h2>
@@ -853,6 +873,21 @@ const AdminSiteSettings = () => {
                 <input type="color" value={settings.themeAccentHover || "#bfa030"} onChange={(e) => setSettings({...settings, themeAccentHover: e.target.value})} className="h-10 w-10 rounded cursor-pointer" />
                 <input type="text" value={settings.themeAccentHover || "#bfa030"} onChange={(e) => setSettings({...settings, themeAccentHover: e.target.value})} className="flex-1 bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 text-white" />
               </div>
+            </div>
+          </div>
+        </div>
+        <div className="border-t border-slate-700 pt-6">
+          <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2"><FileText className="w-5 h-5 text-[var(--theme-accent)]" /> Tipografi (Yazı Tipi)</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="text-slate-400 text-sm block mb-2">Genel Yazı Tipi (Font)</label>
+              <select value={settings.fontFamily || "'Manrope', sans-serif"} onChange={(e) => setSettings({...settings, fontFamily: e.target.value})} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:border-[var(--theme-accent)] focus:outline-none">
+                <option value="'Manrope', sans-serif">Modern ve Okunaklı (Manrope)</option>
+                <option value="'Inter', sans-serif">Temiz ve Profesyonel (Inter)</option>
+                <option value="'Playfair Display', serif">Klasik ve Şık (Playfair Display)</option>
+                <option value="'Times New Roman', serif">Resmi ve Akademik (Times New Roman)</option>
+                <option value="'Space Grotesk', sans-serif">Teknolojik (Space Grotesk)</option>
+              </select>
             </div>
           </div>
         </div>
@@ -1626,23 +1661,43 @@ const HomePage = () => {
   };
 
   return (
-    <div className="App bg-academic-navy min-h-screen">
+    <div className="App bg-[var(--theme-bg)] min-h-screen">
       <style>{`
         :root {
           ${siteSettings.themeBg ? `--theme-bg: ${siteSettings.themeBg};` : ''}
           ${siteSettings.themeBgLight ? `--theme-bg-light: ${siteSettings.themeBgLight};` : ''}
           ${siteSettings.themeAccent ? `--theme-accent: ${siteSettings.themeAccent};` : ''}
           ${siteSettings.themeAccentHover ? `--theme-accent-hover: ${siteSettings.themeAccentHover};` : ''}
+          ${siteSettings.fontFamily ? `--theme-font: ${siteSettings.fontFamily};` : ''}
+        }
+        body, .font-manrope, .font-playfair, .font-space {
+          font-family: var(--theme-font, 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif) !important;
         }
       `}</style>
       <StickyHeader siteTexts={siteTexts} siteSettings={siteSettings} />
-      <HeroSection aboutContent={aboutContent} siteTexts={siteTexts} siteSettings={siteSettings} heroButtons={heroButtons} />
-      <FeaturesSection features={features} />
-      <DynamicServicesSection academicServices={academicServices} studentServices={studentServices} siteTexts={siteTexts} />
-      <CustomSectionsDisplay sections={customSections} />
-      <ContentsSection contents={contents} />
-      <TeachersSection teachers={teachers} siteTexts={siteTexts} />
-      <ContactSection siteSettings={siteSettings} />
+      <div className="pt-20">
+        <Routes>
+          <Route path="/" element={
+            <>
+              <HeroSection aboutContent={aboutContent} siteTexts={siteTexts} siteSettings={siteSettings} heroButtons={heroButtons} />
+              <FeaturesSection features={features} />
+              <CustomSectionsDisplay sections={customSections} />
+            </>
+          } />
+          <Route path="/hizmetler" element={
+            <>
+              <DynamicServicesSection academicServices={academicServices} studentServices={studentServices} siteTexts={siteTexts} />
+              <ContentsSection contents={contents} />
+            </>
+          } />
+          <Route path="/ogretmenler" element={
+            <TeachersSection teachers={teachers} siteTexts={siteTexts} />
+          } />
+          <Route path="/iletisim" element={
+            <ContactSection siteSettings={siteSettings} />
+          } />
+        </Routes>
+      </div>
       <Footer siteTexts={siteTexts} siteSettings={siteSettings} />
       <WhatsAppButton siteSettings={siteSettings} />
     </div>
@@ -1670,11 +1725,12 @@ const editingContent = null;
     }
   }; 
   // -------------------
+function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<HomePage />} />
         <Route path="/admin" element={<AdminPage />} />
+        <Route path="/*" element={<HomePage />} />
       </Routes>
     </BrowserRouter>
   );
