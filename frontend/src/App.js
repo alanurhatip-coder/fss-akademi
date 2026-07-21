@@ -216,26 +216,40 @@ const HeroSection = ({ aboutContent, siteTexts = {}, siteSettings = {}, heroButt
 
 const FeaturesSection = ({ features = [] }) => {
   const displayFeatures = features && features.length > 0 ? features : [
-    { id: 1, title: "Uzman Eğitmenler", desc: "Alanında en iyi akademisyenler", icon: "BookOpen" },
-    { id: 2, title: "Birebir İlgi", desc: "Öğrenciye özel programlama", icon: "Users" },
-    { id: 3, title: "Tam Uyumlu", desc: "Sınav müfredatıyla %100 uyum", icon: "CheckCircle" }
+    { id: 1, title: "Uzman Eğitmenler", desc: "Alanında en iyi akademisyenler", icon: "BookOpen", colorTheme: "gold" },
+    { id: 2, title: "Birebir İlgi", desc: "Öğrenciye özel programlama", icon: "Users", colorTheme: "gold" },
+    { id: 3, title: "Tam Uyumlu", desc: "Sınav müfredatıyla %100 uyum", icon: "CheckCircle", colorTheme: "gold" }
   ];
+
+  const getColorClasses = (theme) => {
+    switch (theme) {
+      case 'red': return { bg: 'from-red-500 to-red-600', shadow: 'rgba(239,68,68,0.15)', textHover: 'group-hover:text-red-500', iconColor: 'text-white' };
+      case 'emerald': return { bg: 'from-emerald-500 to-emerald-600', shadow: 'rgba(16,185,129,0.15)', textHover: 'group-hover:text-emerald-500', iconColor: 'text-white' };
+      case 'orange': return { bg: 'from-orange-500 to-orange-600', shadow: 'rgba(249,115,22,0.15)', textHover: 'group-hover:text-orange-500', iconColor: 'text-white' };
+      case 'purple': return { bg: 'from-purple-500 to-purple-600', shadow: 'rgba(168,85,247,0.15)', textHover: 'group-hover:text-purple-500', iconColor: 'text-white' };
+      case 'blue': return { bg: 'from-blue-500 to-blue-600', shadow: 'rgba(59,130,246,0.15)', textHover: 'group-hover:text-blue-500', iconColor: 'text-white' };
+      default: return { bg: 'from-[var(--theme-accent)] to-[var(--theme-accent-hover)]', shadow: 'rgba(212,175,55,0.15)', textHover: 'group-hover:text-[var(--theme-accent)]', iconColor: 'text-[var(--theme-bg)]' }; // gold default
+    }
+  };
 
   return (
     <section className="py-12 px-6 md:px-12 bg-[var(--theme-bg)] relative z-20">
       <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
-        {displayFeatures.map(feat => (
-          <Link key={feat.id} to="/hizmetler" className="block group relative bg-[var(--theme-bg-light)] rounded-3xl p-6 md:p-8 shadow-xl border border-[var(--theme-accent)]/10 text-center md:text-left overflow-hidden hover:-translate-y-1 transition-transform">
-            <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: `linear-gradient(135deg, transparent 30%, rgba(212,175,55,0.15) 50%, transparent 70%)`, backgroundSize: '200% 200%' }} />
-            <div className="relative z-10">
-              <div className="w-14 h-14 md:w-16 md:h-16 bg-gradient-to-br from-[var(--theme-accent)] to-[var(--theme-accent-hover)] rounded-2xl flex items-center justify-center mb-4 md:mb-6 shadow-lg mx-auto md:mx-0">
-                <DynamicIcon name={feat.icon} className="w-7 h-7 md:w-8 md:h-8 text-[var(--theme-bg)]" />
+        {displayFeatures.map(feat => {
+          const colors = getColorClasses(feat.colorTheme);
+          return (
+            <Link key={feat.id} to="/hizmetler" className="block group relative bg-[var(--theme-bg-light)] rounded-3xl p-6 md:p-8 shadow-xl border border-[var(--theme-accent)]/10 text-center md:text-left overflow-hidden hover:-translate-y-1 transition-transform">
+              <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: `linear-gradient(135deg, transparent 30%, ${colors.shadow} 50%, transparent 70%)`, backgroundSize: '200% 200%' }} />
+              <div className="relative z-10">
+                <div className={`w-14 h-14 md:w-16 md:h-16 bg-gradient-to-br ${colors.bg} rounded-2xl flex items-center justify-center mb-4 md:mb-6 shadow-lg mx-auto md:mx-0`}>
+                  <DynamicIcon name={feat.icon} className={`w-7 h-7 md:w-8 md:h-8 ${colors.iconColor}`} />
+                </div>
+                <h3 className={`text-lg md:text-2xl font-bold text-white mb-2 ${colors.textHover} transition-colors`}>{feat.title}</h3>
+                <p className="text-sm md:text-base text-slate-400">{feat.desc}</p>
               </div>
-              <h3 className="text-lg md:text-2xl font-bold text-white mb-2 group-hover:text-[var(--theme-accent)] transition-colors">{feat.title}</h3>
-              <p className="text-sm md:text-base text-slate-400">{feat.desc}</p>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          );
+        })}
       </div>
     </section>
   );
@@ -880,8 +894,18 @@ const AdminSiteSettings = () => {
           <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2"><FileText className="w-5 h-5 text-[var(--theme-accent)]" /> Tipografi (Yazı Tipi)</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="text-slate-400 text-sm block mb-2">Genel Yazı Tipi (Font)</label>
-              <select value={settings.fontFamily || "'Manrope', sans-serif"} onChange={(e) => setSettings({...settings, fontFamily: e.target.value})} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:border-[var(--theme-accent)] focus:outline-none">
+              <label className="text-slate-400 text-sm block mb-2">Başlık Yazı Tipi (Heading Font)</label>
+              <select value={settings.headingFontFamily || "'Playfair Display', serif"} onChange={(e) => setSettings({...settings, headingFontFamily: e.target.value})} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:border-[var(--theme-accent)] focus:outline-none">
+                <option value="'Manrope', sans-serif">Modern ve Okunaklı (Manrope)</option>
+                <option value="'Inter', sans-serif">Temiz ve Profesyonel (Inter)</option>
+                <option value="'Playfair Display', serif">Klasik ve Şık (Playfair Display)</option>
+                <option value="'Times New Roman', serif">Resmi ve Akademik (Times New Roman)</option>
+                <option value="'Space Grotesk', sans-serif">Teknolojik (Space Grotesk)</option>
+              </select>
+            </div>
+            <div>
+              <label className="text-slate-400 text-sm block mb-2">Genel Yazı Tipi (Body Font)</label>
+              <select value={settings.bodyFontFamily || "'Manrope', sans-serif"} onChange={(e) => setSettings({...settings, bodyFontFamily: e.target.value})} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:border-[var(--theme-accent)] focus:outline-none">
                 <option value="'Manrope', sans-serif">Modern ve Okunaklı (Manrope)</option>
                 <option value="'Inter', sans-serif">Temiz ve Profesyonel (Inter)</option>
                 <option value="'Playfair Display', serif">Klasik ve Şık (Playfair Display)</option>
@@ -1668,10 +1692,15 @@ const HomePage = () => {
           ${siteSettings.themeBgLight ? `--theme-bg-light: ${siteSettings.themeBgLight};` : ''}
           ${siteSettings.themeAccent ? `--theme-accent: ${siteSettings.themeAccent};` : ''}
           ${siteSettings.themeAccentHover ? `--theme-accent-hover: ${siteSettings.themeAccentHover};` : ''}
-          ${siteSettings.fontFamily ? `--theme-font: ${siteSettings.fontFamily};` : ''}
+          ${siteSettings.headingFontFamily ? `--theme-font-heading: ${siteSettings.headingFontFamily};` : ''}
+          ${siteSettings.bodyFontFamily ? `--theme-font-body: ${siteSettings.bodyFontFamily};` : ''}
+          ${siteSettings.fontFamily ? `--theme-font-body: ${siteSettings.fontFamily}; --theme-font-heading: ${siteSettings.fontFamily};` : ''}
         }
-        body, .font-manrope, .font-playfair, .font-space {
-          font-family: var(--theme-font, 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif) !important;
+        body, p, span, a, .font-manrope, .font-space {
+          font-family: var(--theme-font-body, 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif) !important;
+        }
+        h1, h2, h3, h4, h5, h6, .font-playfair {
+          font-family: var(--theme-font-heading, 'Playfair Display', serif) !important;
         }
       `}</style>
       <StickyHeader siteTexts={siteTexts} siteSettings={siteSettings} />
