@@ -153,6 +153,8 @@ class SiteSettingsUpdate(BaseModel):
     themeAccent: Optional[str] = None
     themeAccentHover: Optional[str] = None
     fontFamily: Optional[str] = None
+    headingFontFamily: Optional[str] = None
+    bodyFontFamily: Optional[str] = None
 
 # Teachers
 class TeacherCreate(BaseModel):
