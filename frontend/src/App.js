@@ -1574,7 +1574,7 @@ export const AdminFAQ = () => {
   const fetchFaqs = async () => {
     try {
       const res = await fetch(`${API}/faqs`);
-      setFaqs(await res.json());
+      const data = await res.json(); setFaqs(Array.isArray(data) ? data : []);
     } catch (err) { console.error(err); }
   };
 
@@ -1781,7 +1781,7 @@ const AdminPage = () => {
 
 
 const FAQSection = ({ faqs = [] }) => {
-  if (!faqs || faqs.length === 0) return null;
+  if (!faqs || !Array.isArray(faqs) || faqs.length === 0) return null;
   return (
     <section id="faq" className="py-20 px-6 md:px-12 bg-[var(--theme-bg)] relative z-20">
       <div className="max-w-4xl mx-auto">
