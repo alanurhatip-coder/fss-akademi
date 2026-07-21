@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-dom";
 import "@/App.css";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { GraduationCap, Building2, Users, BookOpen, Send, ArrowDown, Menu, X, Calendar, Lock, LogOut, Save, Eye, EyeOff, Plus, Trash2, Edit, FileText, Layers, Shield, Briefcase, Image, File, ExternalLink, Home, Mail, Settings, BarChart3, BookMarked, Inbox, ChevronRight, Bell, Search, MoreVertical, UserCheck, Upload, Loader2, Palette, Phone, MessageCircle, CheckCircle, Star, MousePointerClick, LayoutGrid, Award } , HelpCircle } from "lucide-react";
+import { GraduationCap, Building2, Users, BookOpen, Send, ArrowDown, Menu, X, Calendar, Lock, LogOut, Save, Eye, EyeOff, Plus, Trash2, Edit, FileText, Layers, Shield, Briefcase, Image, File, ExternalLink, Home, Mail, Settings, BarChart3, BookMarked, Inbox, ChevronRight, Bell, Search, MoreVertical, UserCheck, Upload, Loader2, Palette, Phone, MessageCircle, CheckCircle, Star, MousePointerClick, LayoutGrid, Award, HelpCircle } from "lucide-react";
 
 const API = "https://fss-akademi.onrender.com/api";
 const BACKEND_URL = "https://fss-akademi.onrender.com";
