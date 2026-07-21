@@ -1724,9 +1724,9 @@ const HomePage = () => {
           ${siteSettings.themeBgLight ? `--theme-bg-light: ${siteSettings.themeBgLight};` : ''}
           ${siteSettings.themeAccent ? `--theme-accent: ${siteSettings.themeAccent};` : ''}
           ${siteSettings.themeAccentHover ? `--theme-accent-hover: ${siteSettings.themeAccentHover};` : ''}
+          ${siteSettings.fontFamily ? `--theme-font-body: ${siteSettings.fontFamily}; --theme-font-heading: ${siteSettings.fontFamily};` : ''}
           ${siteSettings.headingFontFamily ? `--theme-font-heading: ${siteSettings.headingFontFamily};` : ''}
           ${siteSettings.bodyFontFamily ? `--theme-font-body: ${siteSettings.bodyFontFamily};` : ''}
-          ${siteSettings.fontFamily ? `--theme-font-body: ${siteSettings.fontFamily}; --theme-font-heading: ${siteSettings.fontFamily};` : ''}
         }
         body, p, span, a, .font-manrope, .font-space {
           font-family: var(--theme-font-body, 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif) !important;
