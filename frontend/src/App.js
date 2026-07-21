@@ -187,17 +187,24 @@ const HeroSection = ({ aboutContent, siteTexts = {}, siteSettings = {}, heroButt
       {heroButtons && heroButtons.length > 0 ? (
         <div className="mt-10 flex flex-wrap justify-center gap-4 opacity-0 animate-fade-in-up" style={{ animationDelay: "0.8s", animationFillMode: "forwards" }}>
           {heroButtons.map(btn => {
-            const isInternal = btn.url === '#services' || btn.url === '/hizmetler';
+            // Internal links: start with '/' or exactly '#services'
+            const isInternal = btn.url.startsWith('/') || btn.url === '#services';
+            const internalPath = btn.url === '#services' ? '/hizmetler' : btn.url;
+            
             const btnClass = `flex items-center gap-3 ${btn.styleType === 'outline' ? 'border-2 border-[var(--theme-accent)] text-[var(--theme-accent)]' : 'bg-gradient-to-r from-[var(--theme-accent)] to-[var(--theme-accent-hover)] text-[var(--theme-bg)]'} rounded-full px-8 py-4 font-bold text-lg hover:scale-105 transition-transform shadow-[0_10px_30px_rgba(212,175,55,0.3)]`;
+            
             if (isInternal) {
               return (
-                <Link key={btn.id} to="/hizmetler" className={btnClass}>
+                <Link key={btn.id} to={internalPath} className={btnClass}>
                   <DynamicIcon name={btn.icon || "MousePointerClick"} className="w-6 h-6" />{btn.text}
                 </Link>
               );
             }
+            
+            // External links (http) or default WhatsApp fallback
+            const finalUrl = btn.url.startsWith('http') ? btn.url : `https://wa.me/${siteSettings.whatsappNumber || "905436619340"}`;
             return (
-              <a key={btn.id} href={btn.url.startsWith('http') ? btn.url : `https://wa.me/${siteSettings.whatsappNumber || "905436619340"}`} target={btn.url.startsWith('http') ? '_blank' : '_self'} rel="noopener noreferrer" className={btnClass}>
+              <a key={btn.id} href={finalUrl} target={btn.url.startsWith('http') ? '_blank' : '_self'} rel="noopener noreferrer" className={btnClass}>
                 <DynamicIcon name={btn.icon || "MousePointerClick"} className="w-6 h-6" />{btn.text}
               </a>
             );
