@@ -59,10 +59,10 @@ module.exports = {
                                 '5': 'hsl(var(--chart-5))'
                         },
                         'academic': {
-                                'navy': '#0f172a',
-                                'navy-light': '#1e293b',
-                                'gold': '#d4af37',
-                                'gold-dim': '#bfa030',
+                                'navy': 'var(--theme-bg, #0f172a)',
+                                'navy-light': 'var(--theme-bg-light, #1e293b)',
+                                'gold': 'var(--theme-accent, #d4af37)',
+                                'gold-dim': 'var(--theme-accent-hover, #bfa030)',
                         },
                         'student': {
                                 'amber': '#f59e0b',

@@ -148,6 +148,10 @@ class SiteSettingsUpdate(BaseModel):
     logoUrl: Optional[str] = None
     faviconUrl: Optional[str] = None
     whatsappNumber: Optional[str] = None
+    themeBg: Optional[str] = None
+    themeBgLight: Optional[str] = None
+    themeAccent: Optional[str] = None
+    themeAccentHover: Optional[str] = None
 
 # Teachers
 class TeacherCreate(BaseModel):
@@ -167,6 +171,7 @@ class TeacherUpdate(BaseModel):
     order: Optional[int] = None
 
 class SiteTextsUpdate(BaseModel):
+    heroBadgeText: Optional[str] = None
     heroTitle: Optional[str] = None
     heroSubtitle: Optional[str] = None
     academicLabel: Optional[str] = None
@@ -178,6 +183,37 @@ class SiteTextsUpdate(BaseModel):
     teachersLabel: Optional[str] = None
     teachersTitle: Optional[str] = None
     teachersDesc: Optional[str] = None
+    appointmentBtnText: Optional[str] = None
+    appointmentBtnIcon: Optional[str] = None
+    appointmentBtnIcon: Optional[str] = None
+
+class HeroButtonCreate(BaseModel):
+    text: str
+    url: str
+    icon: Optional[str] = None
+    styleType: str = "primary" # primary, secondary, outline
+    order: int = 0
+
+class HeroButtonUpdate(BaseModel):
+    text: Optional[str] = None
+    url: Optional[str] = None
+    icon: Optional[str] = None
+    styleType: Optional[str] = None
+    order: Optional[int] = None
+
+class FeatureCardCreate(BaseModel):
+    title: str
+    desc: str
+    icon: str
+    colorTheme: str = "blue" # blue, red, green, purple, etc.
+    order: int = 0
+
+class FeatureCardUpdate(BaseModel):
+    title: Optional[str] = None
+    desc: Optional[str] = None
+    icon: Optional[str] = None
+    colorTheme: Optional[str] = None
+    order: Optional[int] = None
 
 # ==================== DEFAULT DATA ====================
 
@@ -711,6 +747,62 @@ async def upload_file(file: UploadFile = FastAPIFile(...)):
     return {"url": f"/api/uploads/{filename}", "filename": filename}
 
 # ==================== APP SETUP ====================
+
+# ==================== HERO BUTTONS ====================
+@api_router.get("/hero-buttons")
+async def get_hero_buttons():
+    buttons = await db.hero_buttons.find().sort("order", 1).to_list(100)
+    for b in buttons: b["id"] = str(b.pop("_id"))
+    return buttons
+
+@api_router.post("/hero-buttons")
+async def create_hero_button(button: HeroButtonCreate):
+    new_btn = button.model_dump()
+    result = await db.hero_buttons.insert_one(new_btn)
+    new_btn["id"] = str(result.inserted_id)
+    return new_btn
+
+@api_router.put("/hero-buttons/{btn_id}")
+async def update_hero_button(btn_id: str, button: HeroButtonUpdate):
+    from bson import ObjectId
+    update_data = {k: v for k, v in button.model_dump().items() if v is not None}
+    if update_data:
+        await db.hero_buttons.update_one({"_id": ObjectId(btn_id)}, {"$set": update_data})
+    return {"status": "success"}
+
+@api_router.delete("/hero-buttons/{btn_id}")
+async def delete_hero_button(btn_id: str):
+    from bson import ObjectId
+    await db.hero_buttons.delete_one({"_id": ObjectId(btn_id)})
+    return {"status": "success"}
+
+# ==================== FEATURES ====================
+@api_router.get("/features")
+async def get_features():
+    features = await db.features.find().sort("order", 1).to_list(100)
+    for f in features: f["id"] = str(f.pop("_id"))
+    return features
+
+@api_router.post("/features")
+async def create_feature(feature: FeatureCardCreate):
+    new_feat = feature.model_dump()
+    result = await db.features.insert_one(new_feat)
+    new_feat["id"] = str(result.inserted_id)
+    return new_feat
+
+@api_router.put("/features/{feat_id}")
+async def update_feature(feat_id: str, feature: FeatureCardUpdate):
+    from bson import ObjectId
+    update_data = {k: v for k, v in feature.model_dump().items() if v is not None}
+    if update_data:
+        await db.features.update_one({"_id": ObjectId(feat_id)}, {"$set": update_data})
+    return {"status": "success"}
+
+@api_router.delete("/features/{feat_id}")
+async def delete_feature(feat_id: str):
+    from bson import ObjectId
+    await db.features.delete_one({"_id": ObjectId(feat_id)})
+    return {"status": "success"}
 
 app.include_router(api_router)
 

@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "@/App.css";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { GraduationCap, Building2, Users, BookOpen, Send, ArrowDown, Menu, X, Calendar, Lock, LogOut, Save, Eye, EyeOff, Plus, Trash2, Edit, FileText, Layers, Shield, Briefcase, Image, File, ExternalLink, Home, Mail, Settings, BarChart3, BookMarked, Inbox, ChevronRight, Bell, Search, MoreVertical, UserCheck, Upload, Loader2 } from "lucide-react";
+import { GraduationCap, Building2, Users, BookOpen, Send, ArrowDown, Menu, X, Calendar, Lock, LogOut, Save, Eye, EyeOff, Plus, Trash2, Edit, FileText, Layers, Shield, Briefcase, Image, File, ExternalLink, Home, Mail, Settings, BarChart3, BookMarked, Inbox, ChevronRight, Bell, Search, MoreVertical, UserCheck, Upload, Loader2, Palette, Phone, MessageCircle, CheckCircle, Star, MousePointerClick, LayoutGrid, Award } from "lucide-react";
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+const API = "https://fss-akademi.onrender.com/api";
+const BACKEND_URL = "https://fss-akademi.onrender.com";
 
 const WHATSAPP_URL = "https://api.whatsapp.com/send?phone=905309482654&text=Merhaba,%20FSS%20Akademi%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum.";
 const LOGO_URL = "https://customer-assets.emergentagent.com/job_akademi-premium-1/artifacts/gt05fxv8_Ekran%20g%C3%B6r%C3%BCnt%C3%BCs%C3%BC%202026-02-27%20014942.png";
@@ -76,7 +77,19 @@ const ImageUploader = ({ value, onChange, label, shape = "rounded" }) => {
 
 // ==================== FRONTEND COMPONENTS ====================
 
-const StickyHeader = () => {
+const DynamicIcon = ({ name, className }) => {
+  switch (name) {
+    case "Phone": return <Phone className={className} />;
+    case "Mail": return <Mail className={className} />;
+    case "MessageCircle": return <MessageCircle className={className} />;
+    case "CheckCircle": return <CheckCircle className={className} />;
+    case "Star": return <Star className={className} />;
+    case "Calendar":
+    default: return <Calendar className={className} />;
+  }
+};
+
+const StickyHeader = ({ siteTexts = {}, siteSettings = {} }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -93,16 +106,16 @@ const StickyHeader = () => {
   ];
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled ? "bg-academic-navy/95 backdrop-blur-lg shadow-lg py-3" : "bg-transparent py-5"}`}>
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled ? "bg-[var(--theme-bg)]/90 backdrop-blur-xl border-b border-[var(--theme-accent)]/10 shadow-lg py-3" : "bg-transparent py-5"}`}>
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
         <a href="#hero" className="flex items-center gap-3 group">
-          <img src={LOGO_URL} alt="FSS Akademi" className="w-10 h-10 rounded-full object-cover border-2 border-academic-gold/30" />
-          <span className="font-playfair text-lg text-white hidden sm:block">FSS <span className="text-academic-gold">Akademi</span></span>
+          <img src={LOGO_URL} alt="FSS Akademi" className="w-10 h-10 rounded-full object-cover border-2 border-[var(--theme-accent)]/30 group-hover:scale-105 transition-transform" />
+          <span className="font-playfair text-xl text-white group-hover:text-[var(--theme-accent)] transition-colors">FSS Akademi</span>
         </a>
         <nav className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (<a key={link.href} href={link.href} className="font-manrope text-sm text-slate-300 hover:text-academic-gold">{link.label}</a>))}
-          <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-academic-gold text-academic-navy rounded-full px-5 py-2.5 font-manrope font-semibold text-sm hover:bg-academic-gold-dim">
-            <Calendar className="w-4 h-4" />Ücretsiz Randevu
+          {navLinks.map((link) => (<a key={link.href} href={link.href} className="font-manrope text-sm font-medium text-slate-300 hover:text-[var(--theme-accent)] transition-colors">{link.label}</a>))}
+          <a href={`https://wa.me/${siteSettings.whatsappNumber || "905436619340"}`} target="_blank" rel="noopener noreferrer" className="hidden md:flex items-center gap-2 bg-gradient-to-r from-[var(--theme-accent)] to-[var(--theme-accent-hover)] text-[var(--theme-bg)] px-6 py-2.5 rounded-full font-bold hover:scale-105 transition-transform shadow-lg text-sm">
+            <DynamicIcon name={siteTexts.appointmentBtnIcon} className="w-4 h-4" />{siteTexts.appointmentBtnText || "Ücretsiz Randevu"}
           </a>
         </nav>
         <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden text-white p-2">
@@ -137,7 +150,7 @@ const WhatsAppButton = () => {
   );
 };
 
-const HeroSection = ({ aboutContent, siteTexts = {} }) => {
+const HeroSection = ({ aboutContent, siteTexts = {}, siteSettings = {}, heroButtons = [] }) => {
   const [scrollY, setScrollY] = useState(0);
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -146,86 +159,141 @@ const HeroSection = ({ aboutContent, siteTexts = {} }) => {
   }, []);
 
   return (
-    <section id="hero" className="hero-bg mesh-gradient-dark min-h-[85vh] flex flex-col items-center justify-center relative px-6 md:px-12 pt-24">
+    <section id="hero" className="hero-bg mesh-gradient-dark min-h-[85vh] flex flex-col items-center justify-center relative px-6 md:px-12 pt-24 pb-16">
       <div className="floating-shape floating-shape-1" style={{ transform: `translateY(${scrollY * 0.1}px)` }} />
       <div className="floating-shape floating-shape-2" style={{ transform: `translateY(${scrollY * -0.15}px)` }} />
       <div className="logo-container mb-8 opacity-0 animate-fade-in-up" style={{ animationDelay: "0.2s", animationFillMode: "forwards" }}>
-        <img src={LOGO_URL} alt="FSS Akademi Logo" className="w-32 h-32 md:w-40 md:h-40 rounded-full object-cover border-4 border-academic-gold/30" />
+        <img src={LOGO_URL} alt="FSS Akademi Logo" className="w-32 h-32 md:w-40 md:h-40 rounded-full object-cover border-4 border-[var(--theme-accent)]/50 shadow-[0_0_30px_rgba(212,175,55,0.3)]" />
       </div>
-      <h1 className="font-playfair text-4xl sm:text-5xl lg:text-6xl text-white text-center mb-8 opacity-0 animate-fade-in-up" style={{ animationDelay: "0.4s", animationFillMode: "forwards" }}>
-        <span className="text-gradient-gold italic">{siteTexts.heroTitle || "Biz Kimiz?"}</span>
+      <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 border border-[var(--theme-accent)]/20 text-white text-sm font-semibold backdrop-blur-md mb-6 opacity-0 animate-fade-in-up shadow-xl" style={{ animationDelay: "0.3s", animationFillMode: "forwards" }}>
+        {siteTexts.heroBadgeText || "🚀 Geleceğin Eğitim Platformu"}
+      </span>
+      <h1 className="font-playfair text-4xl sm:text-5xl lg:text-7xl font-black text-white text-center mb-8 opacity-0 animate-fade-in-up tracking-tight" style={{ animationDelay: "0.4s", animationFillMode: "forwards" }}>
+        <span className="text-gradient-gold italic pr-2">{siteTexts.heroTitle || "Biz Kimiz?"}</span>
       </h1>
-      <p className="font-manrope text-base md:text-lg text-slate-300 text-center max-w-4xl leading-relaxed opacity-0 animate-fade-in-up px-4" style={{ animationDelay: "0.6s", animationFillMode: "forwards" }}>
-        {aboutContent}<span className="text-academic-gold font-medium"> {siteTexts.heroSubtitle || "Başarı yolculuğunuzda güvenilir yol arkadaşınız olmaktan gurur duyuyoruz."}</span>
+      <p className="font-manrope text-base md:text-xl text-slate-300 text-center max-w-3xl leading-relaxed opacity-0 animate-fade-in-up px-4" style={{ animationDelay: "0.6s", animationFillMode: "forwards" }}>
+        {aboutContent}<span className="text-[var(--theme-accent)] font-medium"> {siteTexts.heroSubtitle || "Başarı yolculuğunuzda güvenilir yol arkadaşınız olmaktan gurur duyuyoruz."}</span>
       </p>
-      <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="mt-10 flex items-center gap-3 bg-academic-gold text-academic-navy rounded-full px-8 py-4 font-semibold text-lg opacity-0 animate-fade-in-up hover:bg-academic-gold-dim" style={{ animationDelay: "0.8s", animationFillMode: "forwards" }}>
-        <Calendar className="w-5 h-5" />Ücretsiz Danışmanlık Randevusu Al
-      </a>
-      <a href="#services" className="absolute bottom-8 left-1/2 -translate-x-1/2 text-academic-gold opacity-60 hover:opacity-100"><ArrowDown className="w-8 h-8" /></a>
+      
+      {heroButtons && heroButtons.length > 0 ? (
+        <div className="mt-10 flex flex-wrap justify-center gap-4 opacity-0 animate-fade-in-up" style={{ animationDelay: "0.8s", animationFillMode: "forwards" }}>
+          {heroButtons.map(btn => (
+            <a key={btn.id} href={btn.url.startsWith('http') ? btn.url : (btn.url === '#services' ? '#services' : `https://wa.me/${siteSettings.whatsappNumber || "905436619340"}`)} target={btn.url.startsWith('http') ? '_blank' : '_self'} rel="noopener noreferrer" className={`flex items-center gap-3 ${btn.styleType === 'outline' ? 'border-2 border-[var(--theme-accent)] text-[var(--theme-accent)]' : 'bg-gradient-to-r from-[var(--theme-accent)] to-[var(--theme-accent-hover)] text-[var(--theme-bg)]'} rounded-full px-8 py-4 font-bold text-lg hover:scale-105 transition-transform shadow-[0_10px_30px_rgba(212,175,55,0.3)]`}>
+              <DynamicIcon name={btn.icon || "MousePointerClick"} className="w-6 h-6" />{btn.text}
+            </a>
+          ))}
+        </div>
+      ) : (
+        <a href={`https://wa.me/${siteSettings.whatsappNumber || "905436619340"}`} target="_blank" rel="noopener noreferrer" className="mt-10 flex items-center gap-3 bg-gradient-to-r from-[var(--theme-accent)] to-[var(--theme-accent-hover)] text-[var(--theme-bg)] rounded-full px-10 py-5 font-bold text-lg opacity-0 animate-fade-in-up hover:scale-105 transition-transform shadow-[0_10px_30px_rgba(212,175,55,0.3)]" style={{ animationDelay: "0.8s", animationFillMode: "forwards" }}>
+          <DynamicIcon name={siteTexts.appointmentBtnIcon || "Calendar"} className="w-6 h-6" />{siteTexts.appointmentBtnText || "Ücretsiz Danışmanlık Randevusu Al"}
+        </a>
+      )}
+
+      <a href="#services" className="absolute bottom-4 left-1/2 -translate-x-1/2 text-[var(--theme-accent)] opacity-60 hover:opacity-100 hover:translate-y-2 transition-all"><ArrowDown className="w-8 h-8" /></a>
+    </section>
+  );
+};
+
+const FeaturesSection = ({ features = [] }) => {
+  const displayFeatures = features && features.length > 0 ? features : [
+    { id: 1, title: "Uzman Eğitmenler", desc: "Alanında en iyi akademisyenler", icon: "BookOpen", colorTheme: "blue" },
+    { id: 2, title: "Birebir İlgi", desc: "Öğrenciye özel programlama", icon: "Users", colorTheme: "red" },
+    { id: 3, title: "Tam Uyumlu", desc: "Sınav müfredatıyla %100 uyum", icon: "CheckCircle", colorTheme: "emerald" }
+  ];
+
+  const getColorClasses = (theme) => {
+    switch (theme) {
+      case 'red': return { bg: 'from-red-500 to-red-600', shadow: 'rgba(239,68,68,0.1)' };
+      case 'emerald': return { bg: 'from-emerald-500 to-emerald-600', shadow: 'rgba(16,185,129,0.1)' };
+      case 'orange': return { bg: 'from-orange-500 to-orange-600', shadow: 'rgba(249,115,22,0.1)' };
+      case 'purple': return { bg: 'from-purple-500 to-purple-600', shadow: 'rgba(168,85,247,0.1)' };
+      default: return { bg: 'from-blue-500 to-blue-600', shadow: 'rgba(59,130,246,0.1)' };
+    }
+  };
+
+  return (
+    <section className="py-12 px-6 md:px-12 bg-[var(--theme-bg)] relative z-20">
+      <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
+        {displayFeatures.map(feat => {
+          const colors = getColorClasses(feat.colorTheme);
+          return (
+            <div key={feat.id} className="group relative bg-[var(--theme-bg-light)] rounded-3xl p-6 md:p-8 shadow-xl border border-[var(--theme-accent)]/10 text-center md:text-left cursor-default overflow-hidden hover:-translate-y-1 transition-transform">
+              <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: `linear-gradient(135deg, transparent 30%, ${colors.shadow} 50%, transparent 70%)`, backgroundSize: '200% 200%' }} />
+              <div className="relative z-10">
+                <div className={`w-14 h-14 md:w-16 md:h-16 bg-gradient-to-br ${colors.bg} rounded-2xl flex items-center justify-center mb-4 md:mb-6 shadow-lg mx-auto md:mx-0`}>
+                  <DynamicIcon name={feat.icon} className="w-7 h-7 md:w-8 md:h-8 text-white" />
+                </div>
+                <h3 className="text-lg md:text-2xl font-bold text-white mb-2">{feat.title}</h3>
+                <p className="text-sm md:text-base text-slate-400">{feat.desc}</p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </section>
   );
 };
 
 const DynamicServicesSection = ({ academicServices, studentServices, siteTexts = {} }) => (
-  <section id="services" className="flex flex-col lg:flex-row min-h-screen">
-    <div className="lg:w-1/2 bg-academic-navy relative overflow-hidden py-16 md:py-24 px-6 md:px-12 lg:px-16">
+  <section id="services" className="flex flex-col lg:flex-row min-h-screen relative z-10">
+    <div className="lg:w-1/2 bg-[var(--theme-bg)] relative overflow-hidden py-16 md:py-24 px-6 md:px-12 lg:px-16 border-t border-[var(--theme-accent)]/10">
       <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "url('https://images.pexels.com/photos/256477/pexels-photo-256477.jpeg')", backgroundSize: "cover" }} />
       <div className="relative z-10 max-w-xl mx-auto lg:mx-0">
-        <span className="font-space text-xs tracking-[0.3em] text-academic-gold uppercase mb-4 block">{siteTexts.academicLabel || "Profesyonel Eğitim"}</span>
-        <h2 className="font-playfair text-3xl md:text-4xl lg:text-5xl text-white mb-4">{(siteTexts.academicTitle || "Akademik & Kurumsal").split("&").length > 1 ? <>{(siteTexts.academicTitle || "Akademik & Kurumsal").split("&")[0]}& <span className="text-gradient-gold italic">{(siteTexts.academicTitle || "Akademik & Kurumsal").split("&")[1]}</span></> : <span className="text-gradient-gold italic">{siteTexts.academicTitle || "Akademik & Kurumsal"}</span>}</h2>
+        <span className="font-space text-xs tracking-[0.3em] text-[var(--theme-accent)] uppercase mb-4 block">{siteTexts.academicLabel || "Profesyonel Eğitim"}</span>
+        <h2 className="font-playfair text-3xl md:text-4xl lg:text-5xl text-white mb-4">{(siteTexts.academicTitle || "Akademik & Kurumsal").split("&").length > 1 ? <>{(siteTexts.academicTitle || "Akademik & Kurumsal").split("&")[0]}& <span className="text-[var(--theme-accent)] italic">{(siteTexts.academicTitle || "Akademik & Kurumsal").split("&")[1]}</span></> : <span className="text-[var(--theme-accent)] italic">{siteTexts.academicTitle || "Akademik & Kurumsal"}</span>}</h2>
         <p className="font-manrope text-slate-400 mb-10">{siteTexts.academicDesc || "Araştırmacılar, akademisyenler ve kurumlar için profesyonel eğitim programları."}</p>
-        <Accordion type="single" collapsible className="space-y-4">
+        <Accordion type="single" collapsible className="space-y-6">
           {academicServices.map((service) => (
-            <AccordionItem key={service.id} value={service.id} className="glass-dark rounded-sm border-academic-gold/20 hover:border-academic-gold/40 overflow-hidden">
-              <AccordionTrigger className="px-6 py-5 hover:no-underline group">
-                <div className="flex items-center gap-4">
-                  <span className="text-academic-gold">{ICON_MAP[service.icon] || <GraduationCap className="w-5 h-5" />}</span>
-                  <span className="font-semibold text-white text-left group-hover:text-academic-gold">{service.title}</span>
+            <AccordionItem key={service.id} value={service.id} className="bg-[var(--theme-bg-light)] rounded-3xl border border-[var(--theme-accent)]/20 hover:border-[var(--theme-accent)]/50 transition-all overflow-hidden shadow-xl">
+              <AccordionTrigger className="px-8 py-6 hover:no-underline group">
+                <div className="flex items-center gap-5">
+                  <span className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[var(--theme-accent)]/20 to-transparent flex items-center justify-center text-[var(--theme-accent)] shadow-inner">{ICON_MAP[service.icon] || <GraduationCap className="w-6 h-6" />}</span>
+                  <span className="text-xl font-bold text-white text-left group-hover:text-[var(--theme-accent)] transition-colors">{service.title}</span>
                 </div>
               </AccordionTrigger>
-              <AccordionContent className="px-6 pb-6">
-                {service.mediaUrl && <div className="mb-4 rounded-lg overflow-hidden border-2 border-academic-gold/30"><img src={service.mediaUrl} alt={service.title} className="w-full h-48 object-cover" /></div>}
-                <ul className="space-y-4">
+              <AccordionContent className="px-8 pb-8 pt-2">
+                {service.mediaUrl && <div className="mb-6 rounded-2xl overflow-hidden shadow-lg"><img src={service.mediaUrl} alt={service.title} className="w-full h-56 object-cover" /></div>}
+                <ul className="space-y-5">
                   {service.items?.map((item, i) => (
-                    <li key={i} className="flex items-start gap-3 text-slate-300">
-                      <span className="w-1.5 h-1.5 bg-academic-gold rounded-full mt-2" />
-                      <div><span className="font-semibold text-white">{item.name}</span><p className="text-sm text-slate-400 mt-1">{item.desc}</p></div>
+                    <li key={i} className="flex items-start gap-4 text-slate-300">
+                      <span className="w-2 h-2 bg-[var(--theme-accent)] rounded-full mt-2 flex-shrink-0" />
+                      <div><span className="font-bold text-white text-lg">{item.name}</span><p className="text-base text-slate-400 mt-1 leading-relaxed">{item.desc}</p></div>
                     </li>
                   ))}
                 </ul>
-                {service.fileUrl && <a href={service.fileUrl} target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex items-center gap-2 text-academic-gold text-sm"><File className="w-4 h-4" /> Materyali İndir</a>}
+                {service.fileUrl && <a href={service.fileUrl} target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex items-center gap-2 bg-[var(--theme-accent)]/10 text-[var(--theme-accent)] px-4 py-2 rounded-xl text-sm font-semibold hover:bg-[var(--theme-accent)]/20 transition-colors"><File className="w-4 h-4" /> Materyali İndir</a>}
               </AccordionContent>
             </AccordionItem>
           ))}
         </Accordion>
       </div>
     </div>
-    <div className="lg:w-1/2 bg-gradient-to-br from-amber-50 to-orange-100 relative overflow-hidden py-16 md:py-24 px-6 md:px-12 lg:px-16">
-      <div className="absolute top-10 right-10 w-40 h-40 bg-amber-200/30 rounded-full blur-3xl" />
+    <div className="lg:w-1/2 bg-[var(--theme-bg-light)] relative overflow-hidden py-16 md:py-24 px-6 md:px-12 lg:px-16 border-t border-[var(--theme-accent)]/10">
+      <div className="absolute top-10 right-10 w-64 h-64 bg-[var(--theme-accent)]/10 rounded-full blur-[100px]" />
       <div className="relative z-10 max-w-xl mx-auto lg:mx-0 lg:ml-auto">
-        <span className="font-space text-xs tracking-[0.3em] text-student-amber-dark uppercase mb-4 block">{siteTexts.studentLabel || "Bireysel Gelişim"}</span>
-        <h2 className="font-playfair text-3xl md:text-4xl lg:text-5xl text-slate-800 mb-4">{(siteTexts.studentTitle || "Veliler & Öğrenciler").split("&").length > 1 ? <>{(siteTexts.studentTitle || "Veliler & Öğrenciler").split("&")[0]}& <span className="text-student-amber-dark italic">{(siteTexts.studentTitle || "Veliler & Öğrenciler").split("&")[1]}</span></> : <span className="text-student-amber-dark italic">{siteTexts.studentTitle || "Veliler & Öğrenciler"}</span>}</h2>
-        <p className="font-manrope text-slate-600 mb-10">{siteTexts.studentDesc || "Çocuklarınızın matematik becerilerini geliştirmek için kapsamlı programlar."}</p>
-        <Accordion type="single" collapsible className="space-y-4">
+        <span className="font-space text-xs tracking-[0.3em] text-[var(--theme-accent)] uppercase mb-4 block">{siteTexts.studentLabel || "Bireysel Gelişim"}</span>
+        <h2 className="font-playfair text-3xl md:text-4xl lg:text-5xl text-white mb-4">{(siteTexts.studentTitle || "Veliler & Öğrenciler").split("&").length > 1 ? <>{(siteTexts.studentTitle || "Veliler & Öğrenciler").split("&")[0]}& <span className="text-[var(--theme-accent)] italic">{(siteTexts.studentTitle || "Veliler & Öğrenciler").split("&")[1]}</span></> : <span className="text-[var(--theme-accent)] italic">{siteTexts.studentTitle || "Veliler & Öğrenciler"}</span>}</h2>
+        <p className="font-manrope text-slate-400 mb-10">{siteTexts.studentDesc || "Çocuklarınızın matematik becerilerini geliştirmek için kapsamlı programlar."}</p>
+        <Accordion type="single" collapsible className="space-y-6">
           {studentServices.map((service) => (
-            <AccordionItem key={service.id} value={service.id} className="glass-light rounded-2xl border-white/40 hover:shadow-lg overflow-hidden">
-              <AccordionTrigger className="px-6 py-5 hover:no-underline group">
-                <div className="flex items-center gap-4">
-                  <span className="text-student-amber-dark">{ICON_MAP[service.icon] || <BookOpen className="w-5 h-5" />}</span>
-                  <span className="font-semibold text-slate-800 text-left group-hover:text-student-amber-dark">{service.title}</span>
+            <AccordionItem key={service.id} value={service.id} className="bg-[var(--theme-bg)] rounded-3xl border border-[var(--theme-accent)]/20 hover:border-[var(--theme-accent)]/50 transition-all overflow-hidden shadow-xl">
+              <AccordionTrigger className="px-8 py-6 hover:no-underline group">
+                <div className="flex items-center gap-5">
+                  <span className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[var(--theme-accent)]/20 to-transparent flex items-center justify-center text-[var(--theme-accent)] shadow-inner">{ICON_MAP[service.icon] || <Users className="w-6 h-6" />}</span>
+                  <span className="text-xl font-bold text-white text-left group-hover:text-[var(--theme-accent)] transition-colors">{service.title}</span>
                 </div>
               </AccordionTrigger>
-              <AccordionContent className="px-6 pb-6">
-                {service.mediaUrl && <div className="mb-4 rounded-lg overflow-hidden border-2 border-amber-300"><img src={service.mediaUrl} alt={service.title} className="w-full h-48 object-cover" /></div>}
-                <ul className="space-y-4">
+              <AccordionContent className="px-8 pb-8 pt-2">
+                {service.mediaUrl && <div className="mb-6 rounded-2xl overflow-hidden shadow-lg"><img src={service.mediaUrl} alt={service.title} className="w-full h-56 object-cover" /></div>}
+                <ul className="space-y-5">
                   {service.items?.map((item, i) => (
-                    <li key={i} className="flex items-start gap-3 text-slate-600">
-                      <span className="w-1.5 h-1.5 bg-student-amber rounded-full mt-2" />
-                      <div><span className="font-semibold text-slate-800">{item.name}</span><p className="text-sm text-slate-500 mt-1">{item.desc}</p></div>
+                    <li key={i} className="flex items-start gap-4 text-slate-300">
+                      <span className="w-2 h-2 bg-[var(--theme-accent)] rounded-full mt-2 flex-shrink-0" />
+                      <div><span className="font-bold text-white text-lg">{item.name}</span><p className="text-base text-slate-400 mt-1 leading-relaxed">{item.desc}</p></div>
                     </li>
                   ))}
                 </ul>
-                {service.fileUrl && <a href={service.fileUrl} target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex items-center gap-2 text-student-amber-dark text-sm"><File className="w-4 h-4" /> Materyali İndir</a>}
+                {service.fileUrl && <a href={service.fileUrl} target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex items-center gap-2 bg-[var(--theme-accent)]/10 text-[var(--theme-accent)] px-4 py-2 rounded-xl text-sm font-semibold hover:bg-[var(--theme-accent)]/20 transition-colors"><File className="w-4 h-4" /> Materyali İndir</a>}
               </AccordionContent>
             </AccordionItem>
           ))}
@@ -333,31 +401,28 @@ const ContactSection = () => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      // 1. Save to our database
-      const res = await fetch(`${API}/messages`, {
+      // 1. Send email via Web3Forms (client-side)
+      const web3Data = new URLSearchParams();
+      web3Data.append("access_key", "c872519d-1773-45ee-9b8a-e3fce5c1ffcf");
+      web3Data.append("subject", `FSS Akademi - Yeni Mesaj: ${formData.name}`);
+      web3Data.append("from_name", "FSS Akademi İletişim Formu");
+      web3Data.append("replyto", formData.email);
+      web3Data.append("name", formData.name);
+      web3Data.append("email", formData.email);
+      web3Data.append("phone", formData.phone || "Belirtilmedi");
+      web3Data.append("message", formData.message);
+      
+      await fetch("https://api.web3forms.com/submit", { method: "POST", body: web3Data, mode: "no-cors" });
+      
+      // 2. Try to save to our database (ignoring failures so form still succeeds)
+      fetch(`${API}/messages`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...formData, subject: formData.category || "Genel" })
-      });
-      // 2. Send email via Web3Forms (client-side, simple request to avoid CORS preflight)
-      try {
-        const web3Data = new URLSearchParams();
-        web3Data.append("access_key", "c872519d-1773-45ee-9b8a-e3fce5c1ffcf");
-        web3Data.append("subject", `FSS Akademi - Yeni Mesaj: ${formData.name}`);
-        web3Data.append("from_name", "FSS Akademi İletişim Formu");
-        web3Data.append("replyto", formData.email);
-        web3Data.append("name", formData.name);
-        web3Data.append("email", formData.email);
-        web3Data.append("phone", formData.phone || "Belirtilmedi");
-        web3Data.append("message", formData.message);
-        await fetch("https://api.web3forms.com/submit", { method: "POST", body: web3Data, mode: "no-cors" });
-      } catch (emailErr) { console.warn("Web3Forms email failed:", emailErr); }
-      if (res.ok) {
-        setSubmitStatus("success");
-        setFormData({ name: "", email: "", phone: "", category: "", message: "" });
-      } else {
-        setSubmitStatus("error");
-      }
+      }).catch(err => console.warn("Backend kapalı:", err));
+
+      setSubmitStatus("success");
+      setFormData({ name: "", email: "", phone: "", category: "", message: "" });
     } catch (error) {
       setSubmitStatus("error");
     } finally {
@@ -373,7 +438,7 @@ const ContactSection = () => {
           <h2 className="font-playfair text-3xl md:text-4xl lg:text-5xl text-white mb-4">Bizimle <span className="text-gradient-gold italic">İletişime Geçin</span></h2>
         </div>
         <div className="glass-dark rounded-2xl p-8 md:p-12 glow-gold">
-          <form action="https://formspree.io/f/xwvgvyel" method="POST" className="contact-form space-y-8">
+          <form onSubmit={handleSubmit} className="contact-form space-y-8">
             <input type="hidden" name="access_key" value="c872519d-1773-45ee-9b8a-e3fce5c1ffcf" />
             <input type="hidden" name="subject" value="FSS Akademi - Yeni İletişim Formu" />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -386,10 +451,12 @@ const ContactSection = () => {
             </div>
             <textarea name="message" value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} placeholder="Mesajınız" rows="4" required className="w-full resize-none" />
             <div className="flex flex-col items-center gap-4">
-              <button type="submit" className="bg-academic-gold text-academic-navy rounded-full px-12 py-4 font-semibold text-lg flex items-center gap-3 hover:bg-academic-gold-dim">
-  Gönder <Send className="w-5 h-5" />
-</button>
-</div>
+              <button type="submit" disabled={isSubmitting} className="bg-academic-gold text-academic-navy rounded-full px-12 py-4 font-semibold text-lg flex items-center gap-3 hover:bg-academic-gold-dim disabled:opacity-50">
+                {isSubmitting ? "Gönderiliyor..." : "Gönder"} <Send className="w-5 h-5" />
+              </button>
+              {submitStatus === "success" && <p className="text-green-400">Mesajınız başarıyla gönderildi!</p>}
+              {submitStatus === "error" && <p className="text-red-400">Mesaj gönderilirken bir hata oluştu. Lütfen daha sonra tekrar deneyiniz.</p>}
+            </div>
           </form>
         </div>
       </div>
@@ -533,7 +600,17 @@ const AdminDashboard = ({ stats, recentMessages, recentContents, setActiveView }
       </div>
   </div>
 );
-};
+
+export const AdminContents = () => {
+  const [contents, setContents] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [editingContent, setEditingContent] = useState(null);
+  const [formData, setFormData] = useState({ title: "", coverImage: "", content: "", status: "draft", category: "education" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [message, setMessage] = useState({ type: "", text: "" });
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => { fetchContents(); }, []);
 
   const fetchContents = async () => {
     try { const res = await fetch(`${API}/contents`); setContents(await res.json()); } catch (err) { console.error(err); }
@@ -547,12 +624,7 @@ const AdminDashboard = ({ stats, recentMessages, recentContents, setActiveView }
       return; 
     }
     setLoading(true);
-    
-       setTimeout(() => {
-      showMsg("success", "İçerik başarıyla eklendi.");
-      setLoading(false);
-    }, 800); // 
-  };
+    try {
       const url = editingContent ? `${API}/contents/${editingContent.id}` : `${API}/contents`;
       const method = editingContent ? "PUT" : "POST";
       const res = await fetch(url, { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(formData) });
@@ -562,9 +634,14 @@ const AdminDashboard = ({ stats, recentMessages, recentContents, setActiveView }
         setEditingContent(null);
         setFormData({ title: "", coverImage: "", content: "", status: "draft", category: "education" });
         fetchContents();
+      } else {
+        showMsg("error", "İşlem başarısız oldu");
       }
-    } catch (err) { showMsg("error", "Bir hata oluştu"); }
-    finally { setLoading(false); }
+    } catch (err) {
+      showMsg("error", "Bir hata oluştu");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDelete = async (id) => {
@@ -679,8 +756,8 @@ const AdminInbox = () => {
           <thead className="bg-slate-700/50"><tr><th className="text-left p-4 text-slate-300 font-medium">Gönderen</th><th className="text-left p-4 text-slate-300 font-medium hidden md:table-cell">E-posta</th><th className="text-left p-4 text-slate-300 font-medium hidden sm:table-cell">Konu</th><th className="text-left p-4 text-slate-300 font-medium hidden lg:table-cell">Tarih</th><th className="text-center p-4 text-slate-300 font-medium">Durum</th><th className="text-right p-4 text-slate-300 font-medium">İşlemler</th></tr></thead>
           <tbody>
             {messages.length === 0 ? <tr><td colSpan="6" className="text-center p-8 text-slate-500">Henüz mesaj yok</td></tr> : messages.map((msg) => (
-              <tr key={msg.id} className={`border-t border-slate-700 hover:bg-slate-700/30 cursor-pointer ${!content.isRead ? 'bg-slate-700/20' : ''}`} onClick={() => openMessage(msg)}>
-                <td className="p-4"><span className={`font-medium ${!content.isRead ? 'text-white' : 'text-slate-300'}`}>{msg.name}</span></td>
+              <tr key={msg.id} className={`border-t border-slate-700 hover:bg-slate-700/30 cursor-pointer ${!msg.isRead ? 'bg-slate-700/20' : ''}`} onClick={() => openMessage(msg)}>
+                <td className="p-4"><span className={`font-medium ${!msg.isRead ? 'text-white' : 'text-slate-300'}`}>{msg.name}</span></td>
                 <td className="p-4 text-slate-400 hidden md:table-cell">{msg.email}</td>
                 <td className="p-4 text-slate-400 hidden sm:table-cell">{msg.subject}</td>
                 <td className="p-4 text-slate-400 hidden lg:table-cell">{msg.createdAt ? new Date(msg.createdAt).toLocaleDateString('tr-TR') : '-'}</td>
@@ -760,6 +837,38 @@ const AdminSiteSettings = () => {
             <div><label className="text-slate-400 text-sm block mb-2">X (Twitter)</label><input type="url" value={settings.twitter || ""} onChange={(e) => setSettings({...settings, twitter: e.target.value})} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:border-academic-gold focus:outline-none" /></div>
           </div>
         </div>
+        <div className="border-t border-slate-700 pt-6"><h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2"><Palette className="w-5 h-5 text-academic-gold" /> Site Renkleri</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="text-slate-400 text-sm block mb-2">Ana Arkaplan Rengi</label>
+              <div className="flex items-center gap-3">
+                <input type="color" value={settings.themeBg || "#0f172a"} onChange={(e) => setSettings({...settings, themeBg: e.target.value})} className="h-10 w-10 rounded cursor-pointer" />
+                <input type="text" value={settings.themeBg || "#0f172a"} onChange={(e) => setSettings({...settings, themeBg: e.target.value})} className="flex-1 bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 text-white" />
+              </div>
+            </div>
+            <div>
+              <label className="text-slate-400 text-sm block mb-2">İkincil Arkaplan Rengi (Kutu vb.)</label>
+              <div className="flex items-center gap-3">
+                <input type="color" value={settings.themeBgLight || "#1e293b"} onChange={(e) => setSettings({...settings, themeBgLight: e.target.value})} className="h-10 w-10 rounded cursor-pointer" />
+                <input type="text" value={settings.themeBgLight || "#1e293b"} onChange={(e) => setSettings({...settings, themeBgLight: e.target.value})} className="flex-1 bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 text-white" />
+              </div>
+            </div>
+            <div>
+              <label className="text-slate-400 text-sm block mb-2">Vurgu Rengi (Buton, Başlık, İkonlar)</label>
+              <div className="flex items-center gap-3">
+                <input type="color" value={settings.themeAccent || "#d4af37"} onChange={(e) => setSettings({...settings, themeAccent: e.target.value})} className="h-10 w-10 rounded cursor-pointer" />
+                <input type="text" value={settings.themeAccent || "#d4af37"} onChange={(e) => setSettings({...settings, themeAccent: e.target.value})} className="flex-1 bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 text-white" />
+              </div>
+            </div>
+            <div>
+              <label className="text-slate-400 text-sm block mb-2">Vurgu Hover Rengi (Buton Hover)</label>
+              <div className="flex items-center gap-3">
+                <input type="color" value={settings.themeAccentHover || "#bfa030"} onChange={(e) => setSettings({...settings, themeAccentHover: e.target.value})} className="h-10 w-10 rounded cursor-pointer" />
+                <input type="text" value={settings.themeAccentHover || "#bfa030"} onChange={(e) => setSettings({...settings, themeAccentHover: e.target.value})} className="flex-1 bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 text-white" />
+              </div>
+            </div>
+          </div>
+        </div>
         <div className="border-t border-slate-700 pt-6"><h2 className="text-lg font-semibold text-white mb-4">Görseller</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <ImageUploader value={settings.logoUrl || ""} onChange={(url) => setSettings({...settings, logoUrl: url})} label="Logo" shape="circle" />
@@ -780,7 +889,15 @@ const AdminSiteTexts = () => {
   useEffect(() => { fetchTexts(); }, []);
 
   const fetchTexts = async () => {
-    try { const res = await fetch(`${API}/site-texts`); setTexts(await res.json()); } catch (err) { console.error(err); }
+    try { 
+      const [resTexts, resAbout] = await Promise.all([
+        fetch(`${API}/site-texts`),
+        fetch(`${API}/about`)
+      ]);
+      const textsData = await resTexts.json();
+      const aboutData = await resAbout.json();
+      setTexts({ ...textsData, aboutDesc: aboutData.content || "" });
+    } catch (err) { console.error(err); }
   };
 
   const showMsg = (type, text) => { setMessage({ type, text }); setTimeout(() => setMessage({ type: "", text: "" }), 3000); };
@@ -788,8 +905,10 @@ const AdminSiteTexts = () => {
   const handleSave = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${API}/site-texts`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(texts) });
-      if (res.ok) showMsg("success", "Site metinleri güncellendi!"); else showMsg("error", "Güncelleme başarısız");
+      const { aboutDesc, ...restTexts } = texts;
+      const resTexts = await fetch(`${API}/site-texts`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(restTexts) });
+      const resAbout = await fetch(`${API}/about`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ content: aboutDesc || "" }) });
+      if (resTexts.ok && resAbout.ok) showMsg("success", "Site metinleri güncellendi!"); else showMsg("error", "Güncelleme başarısız");
     } catch (err) { showMsg("error", "Bağlantı hatası"); }
     finally { setLoading(false); }
   };
@@ -813,8 +932,25 @@ const AdminSiteTexts = () => {
         <div className="bg-slate-800 rounded-2xl p-6 border border-slate-700">
           <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2"><Home className="w-5 h-5 text-academic-gold" /> Ana Sayfa (Hero)</h2>
           <div className="space-y-4">
+            <Field label="Hero Rozet Metni (Ör: 🚀 Geleceğin Platformu)" field="heroBadgeText" />
             <Field label="Başlık (ör: Biz Kimiz?)" field="heroTitle" />
             <Field label="Alt Yazı" field="heroSubtitle" rows={2} />
+            <Field label="Hakkımızda Metni (Ana Paragraf)" field="aboutDesc" rows={5} />
+            <div className="pt-4 border-t border-slate-700">
+              <h3 className="text-md font-medium text-slate-300 mb-4">Randevu Butonu</h3>
+              <Field label="Buton Metni (ör: Ücretsiz Randevu)" field="appointmentBtnText" />
+              <div className="mt-4">
+                <label className="block text-sm font-medium text-slate-400 mb-1">Buton İkonu</label>
+                <select value={texts.appointmentBtnIcon || "Calendar"} onChange={(e) => setTexts({...texts, appointmentBtnIcon: e.target.value})} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:border-academic-gold focus:outline-none">
+                  <option value="Calendar">Takvim (Calendar)</option>
+                  <option value="Phone">Telefon (Phone)</option>
+                  <option value="Mail">Mail (Mail)</option>
+                  <option value="MessageCircle">Mesaj (MessageCircle)</option>
+                  <option value="CheckCircle">Onay (CheckCircle)</option>
+                  <option value="Star">Yıldız (Star)</option>
+                </select>
+              </div>
+            </div>
           </div>
         </div>
         <div className="bg-slate-800 rounded-2xl p-6 border border-slate-700">
@@ -1018,6 +1154,329 @@ const AdminTeachers = () => {
   );
 };
 
+const AdminServices = () => {
+  const [services, setServices] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [editingService, setEditingService] = useState(null);
+  const [formData, setFormData] = useState({ category: "academic", title: "", icon: "GraduationCap", items: [], mediaUrl: "", fileUrl: "", order: 0 });
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState({ type: "", text: "" });
+
+  useEffect(() => { fetchServices(); }, []);
+
+  const fetchServices = async () => {
+    try { const res = await fetch(`${API}/services`); setServices(await res.json()); } catch (err) { console.error(err); }
+  };
+
+  const showMsg = (type, text) => { setMessage({ type, text }); setTimeout(() => setMessage({ type: "", text: "" }), 3000); };
+
+  const handleAddItem = () => {
+    setFormData({ ...formData, items: [...formData.items, { name: "", desc: "" }] });
+  };
+
+  const handleRemoveItem = (index) => {
+    const newItems = [...formData.items];
+    newItems.splice(index, 1);
+    setFormData({ ...formData, items: newItems });
+  };
+
+  const handleItemChange = (index, field, value) => {
+    const newItems = [...formData.items];
+    newItems[index][field] = value;
+    setFormData({ ...formData, items: newItems });
+  };
+
+  const handleSubmit = async () => {
+    if (!formData.title) { showMsg("error", "Ana başlık zorunludur"); return; }
+    setLoading(true);
+    try {
+      const url = editingService ? `${API}/services/${editingService.id}` : `${API}/services`;
+      const method = editingService ? "PUT" : "POST";
+      const res = await fetch(url, { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(formData) });
+      if (res.ok) {
+        showMsg("success", editingService ? "Hizmet güncellendi!" : "Hizmet eklendi!");
+        setShowForm(false);
+        setEditingService(null);
+        setFormData({ category: "academic", title: "", icon: "GraduationCap", items: [], mediaUrl: "", fileUrl: "", order: 0 });
+        fetchServices();
+      } else {
+        showMsg("error", "İşlem başarısız oldu");
+      }
+    } catch (err) {
+      showMsg("error", "Bir hata oluştu");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Bu hizmeti silmek istediğinizden emin misiniz?")) return;
+    try { await fetch(`${API}/services/${id}`, { method: "DELETE" }); showMsg("success", "Hizmet silindi"); fetchServices(); }
+    catch (err) { showMsg("error", "Silme başarısız"); }
+  };
+
+  const handleEdit = (service) => {
+    setEditingService(service);
+    setFormData({ category: service.category || "academic", title: service.title, icon: service.icon || "GraduationCap", items: service.items || [], mediaUrl: service.mediaUrl || "", fileUrl: service.fileUrl || "", order: service.order || 0 });
+    setShowForm(true);
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div><h1 className="text-2xl font-bold text-white">Hizmet Yönetimi</h1><p className="text-slate-400 mt-1">Akordiyon (Slider) alanlarındaki hizmetleri yönetin.</p></div>
+        <button onClick={() => { setShowForm(true); setEditingService(null); setFormData({ category: "academic", title: "", icon: "GraduationCap", items: [], mediaUrl: "", fileUrl: "", order: 0 }); }} className="flex items-center gap-2 bg-academic-gold text-academic-navy px-4 py-2 rounded-lg font-semibold hover:bg-academic-gold-dim">
+          <Plus className="w-5 h-5" /> Yeni Hizmet Ekle
+        </button>
+      </div>
+      {message.text && <div className={`p-4 rounded-lg ${message.type === "success" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"}`}>{message.text}</div>}
+      {showForm && (
+        <div className="bg-slate-800 rounded-2xl p-6 border border-slate-700">
+          <h2 className="text-lg font-semibold text-white mb-4">{editingService ? "Hizmet Düzenle" : "Yeni Hizmet Ekle"}</h2>
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="text-slate-400 text-sm block mb-2">Kategori</label>
+                <select value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:border-academic-gold focus:outline-none">
+                  <option value="academic">Akademik & Kurumsal</option>
+                  <option value="student">Öğrencilere Yönelik</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-slate-400 text-sm block mb-2">Ana Başlık</label>
+                <input type="text" value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} placeholder="Örn: Lisans, Lisansüstü ve Akademisyenlere Yönelik" className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:border-academic-gold focus:outline-none" />
+              </div>
+              <div>
+                <label className="text-slate-400 text-sm block mb-2">İkon</label>
+                <select value={formData.icon} onChange={(e) => setFormData({...formData, icon: e.target.value})} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:border-academic-gold focus:outline-none">
+                  <option value="GraduationCap">Mezuniyet Şapkası (GraduationCap)</option>
+                  <option value="Building2">Bina (Building2)</option>
+                  <option value="Users">İnsanlar (Users)</option>
+                  <option value="BookOpen">Açık Kitap (BookOpen)</option>
+                  <option value="Briefcase">Çanta (Briefcase)</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-slate-400 text-sm block mb-2">Sıralama (Küçükten Büyüğe)</label>
+                <input type="number" value={formData.order} onChange={(e) => setFormData({...formData, order: parseInt(e.target.value) || 0})} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:border-academic-gold focus:outline-none" />
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <ImageUploader value={formData.mediaUrl} onChange={(url) => setFormData({...formData, mediaUrl: url})} label="Medya/Resim (Opsiyonel)" />
+              <div>
+                <label className="text-slate-400 text-sm block mb-2">PDF/Dosya Linki (Opsiyonel)</label>
+                <input type="text" value={formData.fileUrl} onChange={(e) => setFormData({...formData, fileUrl: e.target.value})} placeholder="Örn: https://example.com/file.pdf" className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:border-academic-gold focus:outline-none" />
+              </div>
+            </div>
+
+            <div className="border-t border-slate-700 pt-4 mt-4">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-md font-semibold text-white">Alt Maddeler (İçerikler)</h3>
+                <button onClick={handleAddItem} className="flex items-center gap-1 text-academic-gold text-sm hover:underline"><Plus className="w-4 h-4" /> Madde Ekle</button>
+              </div>
+              <div className="space-y-4">
+                {formData.items.map((item, index) => (
+                  <div key={index} className="p-4 bg-slate-900 rounded-xl border border-slate-700 flex gap-4 items-start">
+                    <div className="flex-1 space-y-3">
+                      <input type="text" value={item.name} onChange={(e) => handleItemChange(index, "name", e.target.value)} placeholder="Madde Başlığı (Örn: Özel Okullar için Danışmanlık)" className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white placeholder-slate-400 focus:border-academic-gold focus:outline-none text-sm" />
+                      <textarea value={item.desc} onChange={(e) => handleItemChange(index, "desc", e.target.value)} placeholder="Madde Açıklaması..." rows={2} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white placeholder-slate-400 focus:border-academic-gold focus:outline-none resize-none text-sm" />
+                    </div>
+                    <button onClick={() => handleRemoveItem(index)} className="p-2 text-red-400 hover:bg-red-500/20 rounded-lg"><Trash2 className="w-4 h-4" /></button>
+                  </div>
+                ))}
+                {formData.items.length === 0 && <p className="text-slate-500 text-sm text-center">Henüz alt madde eklemediniz.</p>}
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-3 pt-4 border-t border-slate-700 mt-6">
+              <button onClick={() => { setShowForm(false); setEditingService(null); }} className="px-4 py-2 rounded-lg bg-slate-700 text-white hover:bg-slate-600">İptal</button>
+              <button onClick={handleSubmit} disabled={loading} className="px-4 py-2 rounded-lg bg-academic-gold text-academic-navy font-semibold hover:bg-academic-gold-dim disabled:opacity-50">{loading ? "Kaydediliyor..." : "Kaydet"}</button>
+            </div>
+          </div>
+        </div>
+      )}
+      <div className="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden">
+        {services.length === 0 ? (
+          <div className="p-8 text-center text-slate-400">Henüz hizmet eklenmemiş.</div>
+        ) : (
+          <div className="divide-y divide-slate-700">
+            {services.map((service) => (
+              <div key={service.id} className="p-4 hover:bg-slate-700/30 transition-colors flex items-center justify-between group">
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-slate-700 flex items-center justify-center text-academic-gold">
+                    <Layers className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-white font-medium">{service.title}</h3>
+                    <p className="text-slate-400 text-sm">{service.category === 'academic' ? 'Akademik & Kurumsal' : 'Öğrencilere Yönelik'} • {service.items?.length || 0} Madde</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button onClick={() => handleEdit(service)} className="p-2 rounded-lg bg-slate-700 text-slate-300 hover:bg-slate-600"><Edit className="w-4 h-4" /></button>
+                  <button onClick={() => handleDelete(service.id)} className="p-2 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30"><Trash2 className="w-4 h-4" /></button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+// ==================== ADMIN HERO BUTTONS ====================
+export const AdminHeroButtons = () => {
+  const [buttons, setButtons] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [editingBtn, setEditingBtn] = useState(null);
+  const [formData, setFormData] = useState({ text: "", url: "", icon: "MousePointerClick", styleType: "primary", order: 0 });
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState({ type: "", text: "" });
+
+  useEffect(() => { fetchButtons(); }, []);
+  const fetchButtons = async () => {
+    try { const res = await fetch(`${API}/hero-buttons`); setButtons(await res.json()); } catch (err) { console.error(err); }
+  };
+
+  const showMsg = (type, text) => { setMessage({ type, text }); setTimeout(() => setMessage({ type: "", text: "" }), 3000); };
+
+  const handleSubmit = async () => {
+    if (!formData.text || !formData.url) return showMsg("error", "Metin ve URL zorunludur!");
+    setLoading(true);
+    try {
+      const url = editingBtn ? `${API}/hero-buttons/${editingBtn.id}` : `${API}/hero-buttons`;
+      const method = editingBtn ? "PUT" : "POST";
+      const res = await fetch(url, { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(formData) });
+      if (res.ok) { showMsg("success", "Buton kaydedildi!"); setShowForm(false); setEditingBtn(null); fetchButtons(); }
+      else showMsg("error", "Kaydedilemedi!");
+    } catch (err) { showMsg("error", "Hata oluştu!"); }
+    finally { setLoading(false); }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Bu butonu silmek istediğinize emin misiniz?")) return;
+    try {
+      const res = await fetch(`${API}/hero-buttons/${id}`, { method: "DELETE" });
+      if (res.ok) { showMsg("success", "Silindi!"); fetchButtons(); }
+    } catch (err) { showMsg("error", "Silinemedi!"); }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div><h1 className="text-2xl font-bold text-white">Hero Butonları</h1><p className="text-slate-400">Ana sayfadaki aksiyon butonlarını yönetin.</p></div>
+        <button onClick={() => { setFormData({ text: "", url: "", icon: "MousePointerClick", styleType: "primary", order: 0 }); setEditingBtn(null); setShowForm(true); }} className="bg-[var(--theme-accent)] text-[var(--theme-bg)] px-4 py-2 rounded-lg font-semibold hover:bg-[var(--theme-accent-hover)]">Yeni Ekle</button>
+      </div>
+      {message.text && <div className={`p-4 rounded-lg ${message.type === "success" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"}`}>{message.text}</div>}
+      
+      {showForm ? (
+        <div className="bg-slate-800 rounded-2xl p-6 border border-slate-700 space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div><label className="text-slate-400 text-sm block mb-2">Buton Metni</label><input type="text" value={formData.text} onChange={e => setFormData({...formData, text: e.target.value})} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 text-white focus:border-[var(--theme-accent)] focus:outline-none" /></div>
+            <div><label className="text-slate-400 text-sm block mb-2">Yönlendirme Linki (URL)</label><input type="text" value={formData.url} onChange={e => setFormData({...formData, url: e.target.value})} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 text-white focus:border-[var(--theme-accent)] focus:outline-none" /></div>
+            <div><label className="text-slate-400 text-sm block mb-2">İkon</label>
+              <select value={formData.icon} onChange={e => setFormData({...formData, icon: e.target.value})} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 text-white focus:border-[var(--theme-accent)] focus:outline-none">
+                <option value="Calendar">Takvim</option><option value="Phone">Telefon</option><option value="MousePointerClick">Tıklama</option><option value="ArrowRight">Ok</option>
+              </select>
+            </div>
+            <div><label className="text-slate-400 text-sm block mb-2">Sıra No</label><input type="number" value={formData.order} onChange={e => setFormData({...formData, order: parseInt(e.target.value) || 0})} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 text-white focus:border-[var(--theme-accent)] focus:outline-none" /></div>
+          </div>
+          <div className="flex justify-end gap-3 pt-4"><button onClick={() => setShowForm(false)} className="px-6 py-2 rounded-lg text-slate-300 hover:bg-slate-700">İptal</button><button onClick={handleSubmit} disabled={loading} className="bg-[var(--theme-accent)] text-[var(--theme-bg)] px-6 py-2 rounded-lg font-semibold hover:bg-[var(--theme-accent-hover)]">{loading ? "Kaydediliyor..." : "Kaydet"}</button></div>
+        </div>
+      ) : (
+        <div className="grid gap-4">
+          {buttons.map(btn => (
+            <div key={btn.id} className="bg-slate-800 p-4 rounded-xl border border-slate-700 flex items-center justify-between group">
+              <div className="flex items-center gap-4 text-white"><DynamicIcon name={btn.icon} className="w-5 h-5 text-[var(--theme-accent)]" /> <span className="font-semibold">{btn.text}</span> <span className="text-sm text-slate-400">{btn.url}</span></div>
+              <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity"><button onClick={() => { setEditingBtn(btn); setFormData({ text: btn.text, url: btn.url, icon: btn.icon || "MousePointerClick", styleType: btn.styleType || "primary", order: btn.order || 0 }); setShowForm(true); }} className="p-2 text-blue-400 hover:bg-blue-400/10 rounded-lg"><Edit className="w-4 h-4" /></button><button onClick={() => handleDelete(btn.id)} className="p-2 text-red-400 hover:bg-red-400/10 rounded-lg"><Trash2 className="w-4 h-4" /></button></div>
+            </div>
+          ))}
+          {buttons.length === 0 && <p className="text-slate-400 text-center py-8">Henüz buton eklenmemiş.</p>}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ==================== ADMIN FEATURES ====================
+export const AdminFeatures = () => {
+  const [features, setFeatures] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [editingFeat, setEditingFeat] = useState(null);
+  const [formData, setFormData] = useState({ title: "", desc: "", icon: "CheckCircle", colorTheme: "blue", order: 0 });
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState({ type: "", text: "" });
+
+  useEffect(() => { fetchFeatures(); }, []);
+  const fetchFeatures = async () => {
+    try { const res = await fetch(`${API}/features`); setFeatures(await res.json()); } catch (err) { console.error(err); }
+  };
+
+  const showMsg = (type, text) => { setMessage({ type, text }); setTimeout(() => setMessage({ type: "", text: "" }), 3000); };
+
+  const handleSubmit = async () => {
+    if (!formData.title || !formData.desc) return showMsg("error", "Başlık ve açıklama zorunludur!");
+    setLoading(true);
+    try {
+      const url = editingFeat ? `${API}/features/${editingFeat.id}` : `${API}/features`;
+      const method = editingFeat ? "PUT" : "POST";
+      const res = await fetch(url, { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(formData) });
+      if (res.ok) { showMsg("success", "Özellik kaydedildi!"); setShowForm(false); setEditingFeat(null); fetchFeatures(); }
+      else showMsg("error", "Kaydedilemedi!");
+    } catch (err) { showMsg("error", "Hata oluştu!"); }
+    finally { setLoading(false); }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Bu özelliği silmek istediğinize emin misiniz?")) return;
+    try {
+      const res = await fetch(`${API}/features/${id}`, { method: "DELETE" });
+      if (res.ok) { showMsg("success", "Silindi!"); fetchFeatures(); }
+    } catch (err) { showMsg("error", "Silinemedi!"); }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div><h1 className="text-2xl font-bold text-white">Özellik Kartları</h1><p className="text-slate-400">Ana sayfadaki 3'lü renkli kartları yönetin.</p></div>
+        <button onClick={() => { setFormData({ title: "", desc: "", icon: "CheckCircle", colorTheme: "blue", order: 0 }); setEditingFeat(null); setShowForm(true); }} className="bg-[var(--theme-accent)] text-[var(--theme-bg)] px-4 py-2 rounded-lg font-semibold hover:bg-[var(--theme-accent-hover)]">Yeni Ekle</button>
+      </div>
+      {message.text && <div className={`p-4 rounded-lg ${message.type === "success" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"}`}>{message.text}</div>}
+      
+      {showForm ? (
+        <div className="bg-slate-800 rounded-2xl p-6 border border-slate-700 space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div><label className="text-slate-400 text-sm block mb-2">Başlık</label><input type="text" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 text-white focus:border-[var(--theme-accent)] focus:outline-none" /></div>
+            <div><label className="text-slate-400 text-sm block mb-2">Kısa Açıklama</label><input type="text" value={formData.desc} onChange={e => setFormData({...formData, desc: e.target.value})} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 text-white focus:border-[var(--theme-accent)] focus:outline-none" /></div>
+            <div><label className="text-slate-400 text-sm block mb-2">İkon</label>
+              <select value={formData.icon} onChange={e => setFormData({...formData, icon: e.target.value})} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 text-white focus:border-[var(--theme-accent)] focus:outline-none">
+                <option value="CheckCircle">Onay (CheckCircle)</option><option value="BookOpen">Kitap (BookOpen)</option><option value="Users">Kullanıcılar (Users)</option><option value="Star">Yıldız (Star)</option><option value="Award">Ödül (Award)</option>
+              </select>
+            </div>
+            <div><label className="text-slate-400 text-sm block mb-2">Tema Rengi</label>
+              <select value={formData.colorTheme} onChange={e => setFormData({...formData, colorTheme: e.target.value})} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 text-white focus:border-[var(--theme-accent)] focus:outline-none">
+                <option value="blue">Mavi</option><option value="red">Kırmızı</option><option value="emerald">Yeşil</option><option value="orange">Turuncu</option><option value="purple">Mor</option>
+              </select>
+            </div>
+            <div><label className="text-slate-400 text-sm block mb-2">Sıra No</label><input type="number" value={formData.order} onChange={e => setFormData({...formData, order: parseInt(e.target.value) || 0})} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 text-white focus:border-[var(--theme-accent)] focus:outline-none" /></div>
+          </div>
+          <div className="flex justify-end gap-3 pt-4"><button onClick={() => setShowForm(false)} className="px-6 py-2 rounded-lg text-slate-300 hover:bg-slate-700">İptal</button><button onClick={handleSubmit} disabled={loading} className="bg-[var(--theme-accent)] text-[var(--theme-bg)] px-6 py-2 rounded-lg font-semibold hover:bg-[var(--theme-accent-hover)]">{loading ? "Kaydediliyor..." : "Kaydet"}</button></div>
+        </div>
+      ) : (
+        <div className="grid gap-4">
+          {features.map(feat => (
+            <div key={feat.id} className="bg-slate-800 p-4 rounded-xl border border-slate-700 flex items-center justify-between group">
+              <div className="flex items-center gap-4 text-white"><DynamicIcon name={feat.icon} className="w-5 h-5 text-[var(--theme-accent)]" /> <div><span className="font-semibold block">{feat.title}</span> <span className="text-sm text-slate-400">{feat.desc} ({feat.colorTheme})</span></div></div>
+              <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity"><button onClick={() => { setEditingFeat(feat); setFormData({ title: feat.title, desc: feat.desc, icon: feat.icon || "CheckCircle", colorTheme: feat.colorTheme || "blue", order: feat.order || 0 }); setShowForm(true); }} className="p-2 text-blue-400 hover:bg-blue-400/10 rounded-lg"><Edit className="w-4 h-4" /></button><button onClick={() => handleDelete(feat.id)} className="p-2 text-red-400 hover:bg-red-400/10 rounded-lg"><Trash2 className="w-4 h-4" /></button></div>
+            </div>
+          ))}
+          {features.length === 0 && <p className="text-slate-400 text-center py-8">Henüz özellik eklenmemiş.</p>}
+        </div>
+      )}
+    </div>
+  );
+};
+
 const AdminPanel = ({ onLogout }) => {
   const [activeView, setActiveView] = useState("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -1042,6 +1501,9 @@ const AdminPanel = ({ onLogout }) => {
 
   const menuItems = [
     { id: "dashboard", label: "Dashboard", icon: <Home className="w-5 h-5" /> },
+    { id: "hero-buttons", label: "Hero Butonları", icon: <MousePointerClick className="w-5 h-5" /> },
+    { id: "features", label: "Özellik Kartları", icon: <LayoutGrid className="w-5 h-5" /> },
+    { id: "services", label: "Hizmet Yönetimi", icon: <Layers className="w-5 h-5" /> },
     { id: "contents", label: "Eğitim / İçerik", icon: <BookMarked className="w-5 h-5" /> },
     { id: "teachers", label: "Öğretmenlerimiz", icon: <UserCheck className="w-5 h-5" /> },
     { id: "inbox", label: "Gelen Kutusu", icon: <Inbox className="w-5 h-5" />, badge: stats.unreadMessages },
@@ -1087,6 +1549,9 @@ const AdminPanel = ({ onLogout }) => {
         </header>
         <main className="flex-1 p-6 overflow-auto">
           {activeView === "dashboard" && <AdminDashboard stats={stats} recentMessages={recentMessages} recentContents={recentContents} setActiveView={setActiveView} />}
+          {activeView === "hero-buttons" && <AdminHeroButtons />}
+          {activeView === "features" && <AdminFeatures />}
+          {activeView === "services" && <AdminServices />}
           {activeView === "contents" && <AdminContents />}
           {activeView === "teachers" && <AdminTeachers />}
           {activeView === "inbox" && <AdminInbox />}
@@ -1116,6 +1581,9 @@ const HomePage = () => {
   const [teachers, setTeachers] = useState([]);
   const [contents, setContents] = useState([]);
   const [siteTexts, setSiteTexts] = useState({});
+  const [siteSettings, setSiteSettings] = useState({});
+  const [heroButtons, setHeroButtons] = useState([]);
+  const [features, setFeatures] = useState([]);
 
   useEffect(() => {
     fetchAbout();
@@ -1124,7 +1592,18 @@ const HomePage = () => {
     fetchTeachers();
     fetchContents();
     fetchSiteTexts();
+    fetchSiteSettings();
+    fetchHeroButtons();
+    fetchFeaturesData();
   }, []);
+
+  const fetchHeroButtons = async () => {
+    try { const res = await fetch(`${API}/hero-buttons`); setHeroButtons(await res.json()); } catch (err) {}
+  };
+
+  const fetchFeaturesData = async () => {
+    try { const res = await fetch(`${API}/features`); setFeatures(await res.json()); } catch (err) {}
+  };
 
   const fetchAbout = async () => {
     try { const res = await fetch(`${API}/about`); const data = await res.json(); if (data.content) { let content = data.content.replace(/\s*Başarı yolculuğunuzda güvenilir yol arkadaşınız olmaktan gurur duyuyoruz\.?\s*$/, ""); setAboutContent(content); } }
@@ -1155,17 +1634,30 @@ const HomePage = () => {
     try { const res = await fetch(`${API}/site-texts`); setSiteTexts(await res.json()); } catch (err) { setSiteTexts({}); }
   };
 
+  const fetchSiteSettings = async () => {
+    try { const res = await fetch(`${API}/site-settings`); setSiteSettings(await res.json()); } catch (err) { setSiteSettings({}); }
+  };
+
   return (
     <div className="App bg-academic-navy min-h-screen">
-      <StickyHeader />
-      <HeroSection aboutContent={aboutContent} siteTexts={siteTexts} />
+      <style>{`
+        :root {
+          ${siteSettings.themeBg ? `--theme-bg: ${siteSettings.themeBg};` : ''}
+          ${siteSettings.themeBgLight ? `--theme-bg-light: ${siteSettings.themeBgLight};` : ''}
+          ${siteSettings.themeAccent ? `--theme-accent: ${siteSettings.themeAccent};` : ''}
+          ${siteSettings.themeAccentHover ? `--theme-accent-hover: ${siteSettings.themeAccentHover};` : ''}
+        }
+      `}</style>
+      <StickyHeader siteTexts={siteTexts} siteSettings={siteSettings} />
+      <HeroSection aboutContent={aboutContent} siteTexts={siteTexts} siteSettings={siteSettings} heroButtons={heroButtons} />
+      <FeaturesSection features={features} />
       <DynamicServicesSection academicServices={academicServices} studentServices={studentServices} siteTexts={siteTexts} />
       <CustomSectionsDisplay sections={customSections} />
       <ContentsSection contents={contents} />
       <TeachersSection teachers={teachers} siteTexts={siteTexts} />
-      <ContactSection />
-      <Footer />
-      <WhatsAppButton />
+      <ContactSection siteSettings={siteSettings} />
+      <Footer siteTexts={siteTexts} siteSettings={siteSettings} />
+      <WhatsAppButton siteSettings={siteSettings} />
     </div>
   );
 };
@@ -1173,6 +1665,7 @@ const HomePage = () => {
 // ==================== MAIN APP ====================
 
 function App() {
+const editingContent = null;
   const [replyingTo, setReplyingTo] = useState(null);
   const [replyText, setReplyText] = useState("");
   const sendReply = async (msg) => {
@@ -1199,30 +1692,5 @@ function App() {
     </BrowserRouter>
   );
 }
-export const AdminContents = () => {
-  const [contents, setContents] = useState([]);
-  const [showForm, setShowForm] = useState(false);
-  const [editingContent, setEditingContent] = useState(null);
-  const [formData, setFormData] = useState({ title: "", coverImage: "", content: "", status: "draft", category: "education" });
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState({ type: "", text: "" });
 
-  useEffect(() => { fetchContents(); }, []);
-
-const fetchContents = async () => {
-    try { 
-      const res = await fetch(`${API}/contents`); 
-      const data = await res.json();
-      setContents(data); 
-    } catch (err) { 
-      console.error(err); 
-    }
-  };
-
-  return (
-    <div>
-      <h1>Admin Paneli</h1>
-    </div>
-  );
-};
 export default App;
