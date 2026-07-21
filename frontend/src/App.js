@@ -1707,25 +1707,6 @@ const HomePage = () => {
 // ==================== MAIN APP ====================
 
 function App() {
-const editingContent = null;
-  const [replyingTo, setReplyingTo] = useState(null);
-  const [replyText, setReplyText] = useState("");
-  const sendReply = async (msg) => {
-    try {
-      await fetch(`${API}/messages/reply`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-	body: JSON.stringify({ email: msg.email, reply: replyText })  
-      });
-      alert("Yanıt gönderildi!");
-      setReplyingTo(null);
-      setReplyText("");
-    } catch (err) {
-      alert("Hata oluştu!");
-    }
-  }; 
-  // -------------------
-function App() {
   return (
     <BrowserRouter>
       <Routes>
