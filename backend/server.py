@@ -39,10 +39,10 @@ load_dotenv(ROOT_DIR / '.env')
 
 import os
 
-mongo_url = os.getenv("MONGO_URI", "mongodb://localhost:27017")
+mongo_url = os.getenv("MONGO_URI", os.getenv("MONGO_URL", "mongodb+srv://fssakademi:fssakademi1.@cluster0.ujtlu6o.mongodb.net/?appName=Cluster0"))
 client = AsyncIOMotorClient(mongo_url)
 
-db = client[os.getenv("DB_NAME", "test_database")]
+db = client[os.getenv("DB_NAME", "fss_akademi_db")]
 
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
