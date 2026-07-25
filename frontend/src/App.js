@@ -1913,9 +1913,7 @@ const HomePage =  () => {
           } />
           <Route path="/hizmetler" element={
             <>
-                    <DynamicServicesSection academicServices={academicServices} studentServices={studentServices} siteTexts={siteTexts} />
-        <FAQSection faqs={faqs} />
-      <FAQSection faqs={faqs} />
+              <DynamicServicesSection academicServices={academicServices} studentServices={studentServices} siteTexts={siteTexts} />
               <ContentsSection contents={contents} />
             </>
           } />
